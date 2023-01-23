@@ -1,8 +1,5 @@
 import nextConnect from 'next-connect';
 import log4js from 'log4js';
-// import crypt from 'simple-crypto-js';
-
-// const cryptic = new crypt(process.env.API_SALT);
 
 log4js.configure({
   appenders: {
@@ -33,12 +30,14 @@ const auth = nextConnect({
       .json({ error: `Sorry something Happened! ${error.message}` });
   },
   onNoMatch(req, res) {
-    res.status(405).json({ error: `Method "${req.method}" Not Allowed` });
+    res
+      .status(405)
+      .json({ error: `Method "${req.method}" Not Allowed` });
   },
   onBadRequest(req, res) {
     res.status(400).json({ error: `Bad Request` });
   },
-})
+});
 // .post((req, res, next) => {
 //     // extract x-api-key from request header
 //     const API_KEY = req.headers['x-api-key'];

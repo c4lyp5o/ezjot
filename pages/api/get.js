@@ -6,7 +6,9 @@ const getAPI = nextConnect();
 getAPI.use(auth);
 
 async function responseType(req, res) {
-  logger.warn(`${req.method} ${req.url} User entered wrong key / password`);
+  logger.warn(
+    `${req.method} ${req.url} User entered wrong key / password`
+  );
   return res.status(404).json({
     status: 'Failed',
     code: 404,
@@ -15,17 +17,38 @@ async function responseType(req, res) {
 }
 
 getAPI.get(async (req, res) => {
-  const { key, password } = req.query;
-  const Uploads = await prisma.uploads.findFirst({
-    where: {
-      key: key,
-      password: password,
-    },
-  });
-  try {    
-    res.status(200).json(Uploads);
-  } catch (error) {
-    responseType(req, res);
+  const { key, password, mode } = req.query;
+  switch (mode) {
+    case 'c':
+      console.log('c mode');
+      const getText = await prisma.uploads.findFirst({
+        where: {
+          key: key,
+        },
+      });
+      try {
+        res.status(200).json(getText);
+      } catch (error) {
+        responseType(req, res);
+      }
+      break;
+    case 'r':
+      console.log('r mode');
+      const passCheck = await prisma.uploads.findFirst({
+        where: {
+          key: key,
+          password: password,
+        },
+      });
+      if (passCheck) {
+        res.status(200).json({ status: 'Success', code: 200 });
+      } else {
+        responseType(req, res);
+      }
+      break;
+    default:
+      responseType(req, res);
+      break;
   }
 });
 
