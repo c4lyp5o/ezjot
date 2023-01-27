@@ -1,5 +1,11 @@
 import nextConnect from 'next-connect';
+import sslRedirect from 'express-sslify';
+import helmet from 'helmet';
+import expressBrute from 'express-brute';
 import log4js from 'log4js';
+
+const bruteStore = new expressBrute.MemoryStore();
+const bruteForce = new expressBrute(bruteStore);
 
 log4js.configure({
   appenders: {
@@ -61,4 +67,19 @@ const auth = nextConnect({
 //     next();
 //   });
 
-export { auth, logger };
+const withHelmet = nextConnect();
+withHelmet.use(helmet());
+
+const withBruteForce = nextConnect();
+withBruteForce.use(bruteForce.prevent);
+
+const withSslRedirect = nextConnect();
+withSslRedirect.use(sslRedirect.HTTPS({ trustProtoHeader: true }));
+
+export {
+  auth,
+  logger,
+  withHelmet,
+  withBruteForce,
+  withSslRedirect,
+};

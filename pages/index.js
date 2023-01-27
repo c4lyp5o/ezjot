@@ -1,5 +1,3 @@
-import { Inter } from '@next/font/google';
-
 import Textbox from './components/textbox';
 import GetTextBox from './components/gettext';
 

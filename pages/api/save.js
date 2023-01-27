@@ -1,10 +1,20 @@
-import { auth, logger } from '../../middleware/default';
+import {
+  auth,
+  logger,
+  withHelmet,
+  withBruteForce,
+  withSslRedirect,
+} from '../../middleware/default';
 import nextConnect from 'next-connect';
 import prisma from '../../lib/prisma';
 import crypto from 'crypto';
 
 const saveAPI = nextConnect();
-saveAPI.use(auth);
+saveAPI
+  .use(auth)
+  .use(withHelmet)
+  .use(withBruteForce)
+  .use(withSslRedirect);
 
 saveAPI.post(async (req, res) => {
   let { id, pastedText, dad, mode } = req.body;
@@ -24,6 +34,9 @@ saveAPI.post(async (req, res) => {
           dad: dad,
         },
       });
+      logger.info(
+        `New text uploaded with key: ${Uploads.key} and password: ${Uploads.password}`
+      );
       res.status(200).json({
         message: 'Text Uploaded',
         key: Uploads.key,

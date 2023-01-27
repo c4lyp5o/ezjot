@@ -1,10 +1,9 @@
 const ClearButton = (props) => {
-  const { onClick } = props;
   return (
     <button
       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
       type="button"
-      onClick={() => onClick()}
+      onClick={() => props.onClick()}
     >
       Clear
     </button>
@@ -23,12 +22,11 @@ const SaveButton = () => {
 };
 
 const SaveEditButton = (props) => {
-  const { onClick } = props;
   return (
     <button
       className="bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded"
       type="button"
-      onClick={() => onClick()}
+      onClick={() => props.onClick()}
     >
       Save
     </button>
@@ -46,4 +44,20 @@ const GetButton = () => {
   );
 };
 
-export { ClearButton, SaveButton, SaveEditButton, GetButton };
+const RenderButton = (props) => {
+  const { type, onClick } = props;
+  switch (type) {
+    case 'clear':
+      return <ClearButton onClick={onClick} />;
+    case 'save':
+      return <SaveButton />;
+    case 'saveEdit':
+      return <SaveEditButton onClick={onClick} />;
+    case 'get':
+      return <GetButton />;
+    default:
+      return <SaveButton />;
+  }
+};
+
+export default RenderButton;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { ClearButton, SaveButton } from './buttons';
+import Buttons from './buttons';
 import Editor from './editor';
 
 function Info(props) {
@@ -59,8 +59,8 @@ export default function Textbox() {
             }}
           />
         </div>
-        <ClearButton onClick={handleClear} />
-        <SaveButton />
+        <Buttons type="clear" onClick={handleClear} />
+        <Buttons type="save" />
         {saving && <p>Saving...</p>}
         {info && (
           <div className="grid grid-cols gap-2 justify-center text-center">

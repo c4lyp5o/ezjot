@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { ClearButton, GetButton, SaveEditButton } from './buttons';
+import Buttons from './buttons';
 import Editor from './editor';
 
 export default function GetTextBox() {
@@ -44,7 +44,7 @@ export default function GetTextBox() {
         `/api/get?key=${key}&password=${password}&mode=r`
       );
       setEditable(true);
-      toast.success('Gottem!');
+      toast.success('EDIT MODE ON!');
     } catch (err) {
       console.log(err);
       toast.error('Wrong Password!');
@@ -114,11 +114,11 @@ export default function GetTextBox() {
             }}
           />
         ) : null}
-        <ClearButton onClick={handleClear} />
+        <Buttons type="clear" onClick={handleClear} />
         {editable ? (
-          <SaveEditButton onClick={saveEdit} />
+          <Buttons type="saveEdit" onClick={saveEdit} />
         ) : (
-          <GetButton />
+          <Buttons type="get" />
         )}
       </div>
     </form>
