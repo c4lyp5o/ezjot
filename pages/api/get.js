@@ -3,7 +3,6 @@ import {
   logger,
   withHelmet,
   withBruteForce,
-  withSslRedirect,
 } from '../../middleware/default';
 import prisma from '../../lib/prisma';
 import nextConnect from 'next-connect';
@@ -13,7 +12,6 @@ getAPI
   .use(auth)
   .use(withHelmet)
   .use(withBruteForce)
-  .use(withSslRedirect);
 
 async function responseType(req, res) {
   logger.warn(

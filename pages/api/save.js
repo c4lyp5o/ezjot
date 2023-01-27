@@ -3,7 +3,6 @@ import {
   logger,
   withHelmet,
   withBruteForce,
-  withSslRedirect,
 } from '../../middleware/default';
 import nextConnect from 'next-connect';
 import prisma from '../../lib/prisma';
@@ -14,7 +13,6 @@ saveAPI
   .use(auth)
   .use(withHelmet)
   .use(withBruteForce)
-  .use(withSslRedirect);
 
 saveAPI.post(async (req, res) => {
   let { id, pastedText, dad, mode } = req.body;
