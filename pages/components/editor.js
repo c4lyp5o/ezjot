@@ -4,6 +4,7 @@ export default function Editor({ onChange, name, value, ro }) {
   const editorRef = useRef(null);
   const { CKEditor, ClassicEditor } = editorRef.current || {};
   const [editorLoaded, setEditorLoaded] = useState(false);
+  const [editorHeight, setEditorHeight] = useState('auto');
 
   useEffect(() => {
     editorRef.current = {
@@ -13,8 +14,17 @@ export default function Editor({ onChange, name, value, ro }) {
     setEditorLoaded(true);
   }, []);
 
+  useEffect(() => {
+    const editorContainer = editorRef.current?.container;
+    if (editorContainer) {
+      editorContainer.style.height = '200px';
+      editorContainer.style.overflowY = 'auto';
+      setEditorHeight(`${editorContainer.offsetHeight}px`);
+    }
+  }, [editorLoaded]);
+
   return (
-    <div>
+    <div style={{ height: editorHeight }}>
       {editorLoaded ? (
         <CKEditor
           editor={ClassicEditor}

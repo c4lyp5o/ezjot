@@ -8,55 +8,68 @@ import prisma from '../../lib/prisma';
 import nextConnect from 'next-connect';
 
 const getAPI = nextConnect();
-getAPI
-  .use(auth)
-  .use(withHelmet)
-  .use(withBruteForce)
 
-async function responseType(req, res) {
-  logger.warn(
-    `${req.method} ${req.url} User entered wrong key / password`
-  );
-  return res.status(404).json({
-    status: 'Failed',
-    code: 404,
-    error: 'No text found using the key provided!',
-  });
-}
+getAPI.use(auth).use(withHelmet).use(withBruteForce);
 
 getAPI.get(async (req, res) => {
   const { key, password, mode } = req.query;
+
+  if (!key || !mode) {
+    logger.warn(`${req.method} ${req.url} No password / mode provided.`);
+    return res.status(400).json({
+      status: 'Failed',
+      code: 400,
+      error: 'Missing required parameters.',
+    });
+  }
+
   switch (mode) {
-    case 'c':
-      console.log('c mode');
+    case 'c': {
       const getText = await prisma.uploads.findFirst({
         where: {
-          key: key,
+          key,
         },
       });
-      try {
-        res.status(200).json(getText);
-      } catch (error) {
-        responseType(req, res);
+      return getText
+        ? res.status(200).json(getText)
+        : res.status(404).json({
+            status: 'Failed',
+            code: 404,
+            error: 'No text found using the key provided!',
+          });
+    }
+    case 'r': {
+      if (!password) {
+        logger.warn(`${req.method} ${req.url} User entered wrong password`);
+        return res.status(400).json({
+          status: 'Failed',
+          code: 400,
+          error: 'Missing required parameter.',
+        });
       }
-      break;
-    case 'r':
-      console.log('r mode');
+
       const passCheck = await prisma.uploads.findFirst({
         where: {
-          key: key,
-          password: password,
+          key,
+          password,
         },
       });
-      if (passCheck) {
-        res.status(200).json({ status: 'Success', code: 200 });
-      } else {
-        responseType(req, res);
-      }
-      break;
+
+      return passCheck
+        ? res.status(200).json({ status: 'Success', code: 200 })
+        : res.status(404).json({
+            status: 'Failed',
+            code: 404,
+            error: 'No text found using the key / password provided!',
+          });
+    }
     default:
-      responseType(req, res);
-      break;
+      logger.warn(`${req.method} ${req.url} No mode provided`);
+      return res.status(400).json({
+        status: 'Failed',
+        code: 400,
+        error: 'Invalid mode parameter.',
+      });
   }
 });
 

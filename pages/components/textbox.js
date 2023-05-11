@@ -4,54 +4,54 @@ import axios from 'axios';
 import Buttons from './buttons';
 import Editor from './editor';
 
-function Info(props) {
+const Info = ({ children }) => {
   return (
-    <div className="flex flex-col">
-      <p className="text-sm text-gray-500">
-        <strong>Info:</strong> {props.children}
+    <div className='flex flex-col'>
+      <p className='text-sm text-gray-500'>
+        <strong>Info:</strong> {children}
       </p>
     </div>
   );
-}
+};
 
 export default function Textbox() {
   const [text, setText] = useState('');
-  const [info, setInfo] = useState('');
-  const [saving, setSaving] = useState(false);
+  const [info, setInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (text === '') {
-      return toast.error('Nothing to save');
+      toast.error('Nothing to save');
+      return;
     }
-    setSaving(true);
+    setLoading(true);
     try {
-      const res = await axios.post('/api/save', {
+      const { data } = await axios.post('/api/save', {
         pastedText: text,
         mode: 'c',
       });
-      setSaving(false);
-      setInfo(res);
+      setInfo(data);
       toast.success('Saved');
       setText('');
     } catch (err) {
-      setSaving(false);
       console.log(err);
       toast.error('Something went wrong');
     }
+    setLoading(false);
   };
 
-  const handleClear = () => {
+  const handleClear = async () => {
     setText('');
     setInfo(null);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="grid grid-flow-row gap-1">
-        <div className="flex flex-col h-64">
+      <div className='grid grid-flow-row gap-1'>
+        <div className='flex flex-col h-64'>
           <Editor
-            name="yoursoontobetext"
+            name='yoursoontobetext'
             value={text}
             ro={true}
             onChange={(text) => {
@@ -59,13 +59,13 @@ export default function Textbox() {
             }}
           />
         </div>
-        <Buttons type="clear" onClick={handleClear} />
-        <Buttons type="save" />
-        {saving && <p>Saving...</p>}
+        <Buttons type='clear' onClick={handleClear} />
+        <Buttons type='save' />
+        {loading && <p>Saving...</p>}
         {info && (
-          <div className="grid grid-cols gap-2 justify-center text-center">
+          <div className='grid grid-cols gap-2 justify-center text-center'>
             <Info>
-              Key: {info.data.key}, Pass: {info.data.password}
+              Key: {info.key}, Pass: {info.password}
             </Info>
           </div>
         )}

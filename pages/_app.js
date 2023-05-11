@@ -1,6 +1,8 @@
-import '@/styles/globals.css';
 import { ToastContainer } from 'react-toastify';
+
+import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
+
 import Layout from './components/layout';
 
 export default function App({ Component, pageProps }) {
@@ -8,7 +10,7 @@ export default function App({ Component, pageProps }) {
     <Layout>
       <Component {...pageProps} />
       <ToastContainer
-        position="top-right"
+        position='top-right'
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -17,7 +19,7 @@ export default function App({ Component, pageProps }) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        theme='dark'
       />
     </Layout>
   );
