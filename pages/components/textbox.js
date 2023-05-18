@@ -37,7 +37,7 @@ export default function Textbox() {
       toast.success('Saved');
       setText('');
     } catch (err) {
-      // console.log(err);
+      console.log(err);
       toast.error(`Something went wrong. ${err}`);
     }
     setLoading(false);
