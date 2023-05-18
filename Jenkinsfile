@@ -23,6 +23,12 @@ pipeline {
             }
         }
 
+        stage('Print current working directory') {
+            steps {
+                sh 'pwd'
+            }
+        }
+
         stage('Prepare environment') {
             steps {
                 echo 'Creating .env file...'
@@ -31,7 +37,22 @@ pipeline {
                     API_SALT=${ezjotAPIsalt}
                     API_KEY=${ezjotAPIkey}
                 """
+                echo 'Copying .env file...'
+                sh "cp .env /home/calypso/ezjot"
                 echo 'Done'
+            }
+        }
+
+        stage('Verify .env file') {
+            steps {
+                script {
+                    def envFile = new File('.env')
+                    if (!envFile.exists()) {
+                        error('.env file not found')
+                    } else {
+                        echo '.env file found'
+                    }
+                }
             }
         }
 
