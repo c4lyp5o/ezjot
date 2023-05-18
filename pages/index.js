@@ -7,12 +7,22 @@ import GetTextBox from './components/gettext';
 export default function Home() {
   return (
     <Fragment>
-      <Head
-        title='EZJOT'
-        description='EZJOT is a simple, easy to use, and secure way to jot down anything.'
-        keywords='EZJOT, jot, down, anything, simple, easy, secure, text, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio'
-        author='c4lyp5o'
-      />
+      <Head>
+        <title>EZJOT</title>
+        <description>
+          EZJOT is a simple, easy to use, and secure way to jot down anything
+        </description>{' '}
+        <keywords>
+          EZJOT, jot, down, anything, simple, easy, secure, text, textbin,
+          textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io,
+          textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio,
+          textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io,
+          textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio,
+          textbin, textbin.io, textbinio, textbin.io, textbinio, textbin,
+          textbin.io, textbinio, textbin.io, textbinio
+        </keywords>{' '}
+        <author>c4lyp5o</author>
+      </Head>
       <main className='flex flex-col items-center justify-center w-full h-screen bg-black'>
         <div className='m-4'>
           <h1 className='text-6xl font-bold text-white'>EZJOT</h1>

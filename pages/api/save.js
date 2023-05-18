@@ -1,9 +1,4 @@
-import {
-  auth,
-  logger,
-  withHelmet,
-  withBruteForce,
-} from '../../middleware/default';
+import { auth, withHelmet, withBruteForce } from '../../middleware/default';
 import nextConnect from 'next-connect';
 import prisma from '../../lib/prisma';
 import crypto from 'crypto';
@@ -35,7 +30,6 @@ saveAPI.post(async ({ body: { id, pastedText, dad, mode } }, res) => {
           dad: Uploads.dad,
         });
       } catch (error) {
-        logger.error(error);
         res.status(500).json({
           status: 'Failed',
           code: 500,
