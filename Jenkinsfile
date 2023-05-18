@@ -4,8 +4,8 @@ pipeline {
     environment {
         telegramBotToken = credentials('telegram-bot-token')
         telegramChatId = credentials('telegram-chat-id')
-        ezjotAPIsalt = credntials('ezjotAPIsalt')
-        ezjotAPIkey = credntials('ezjotAPIkey')
+        ezjotAPIsalt = credentials('ezjotAPIsalt')
+        ezjotAPIkey = credentials('ezjotAPIkey')
     }
 
     stages {
