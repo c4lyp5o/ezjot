@@ -34,27 +34,27 @@ pipeline {
                 echo 'Creating .env file...'
                 writeFile file: '.env', text: """
                     DATABASE_URL="file:../db/ezjot.db"
-                    API_SALT=${ezjotAPIsalt}
-                    API_KEY=${ezjotAPIkey}
+                    API_SALT=$ezjotAPIsalt
+                    API_KEY=$ezjotAPIkey
                 """
                 echo 'Copying .env file...'
-                sh "cp .env /home/calypso/ezjot"
+                sh "cp .env $WORKSPACE/ezjot"
                 echo 'Done'
             }
         }
 
-        stage('Verify .env file') {
-            steps {
-                script {
-                    def envFile = new File('.env')
-                    if (!envFile.exists()) {
-                        error('.env file not found')
-                    } else {
-                        echo '.env file found'
-                    }
-                }
-            }
-        }
+        // stage('Verify .env file') {
+        //     steps {
+        //         script {
+        //             def envFile = new File('.env')
+        //             if (!envFile.exists()) {
+        //                 error('.env file not found')
+        //             } else {
+        //                 echo '.env file found'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Build') {
             steps {
