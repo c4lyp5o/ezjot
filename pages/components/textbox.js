@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { BsInfoCircleFill } from 'react-icons/bs';
 import axios from 'axios';
 import Buttons from './buttons';
 import Editor from './editor';
 
 const Info = ({ children }) => {
   return (
-    <div className='flex flex-col'>
-      <p className='text-sm text-gray-500'>
-        <strong>Info:</strong> {children}
-      </p>
+    <div className='flex text-sm text-gray-500 mt-2'>
+      <span>
+        <BsInfoCircleFill className='text-red-600 mr-2' />
+      </span>{' '}
+      {children}
     </div>
   );
 };
@@ -49,7 +51,7 @@ export default function Textbox() {
   return (
     <form onSubmit={handleSubmit}>
       <div className='grid grid-flow-row gap-1'>
-        <div className='flex flex-col h-64'>
+        <div className='flex flex-col h-64 overflow-y-auto mb-2'>
           <Editor
             name='yoursoontobetext'
             value={text}
@@ -62,14 +64,14 @@ export default function Textbox() {
         <Buttons type='clear' onClick={handleClear} />
         <Buttons type='save' />
         {loading && <p>Saving...</p>}
-        {info && (
-          <div className='grid grid-cols gap-2 justify-center text-center'>
-            <Info>
-              Key: {info.key}, Pass: {info.password}
-            </Info>
-          </div>
-        )}
       </div>
+      {info && (
+        <div className='flex text-center items-center justify-center mt-2'>
+          <Info>
+            Key: {info.key}, Pass: {info.password}
+          </Info>
+        </div>
+      )}
     </form>
   );
 }

@@ -12,19 +12,17 @@ const saveAPI = nextConnect();
 saveAPI.use(auth).use(withHelmet).use(withBruteForce);
 
 saveAPI.post(async ({ body: { id, pastedText, dad, mode } }, res) => {
-  if (!dad) {
-    dad = false;
-  }
-
   switch (mode) {
     case 'c':
       try {
+        const newKey = crypto.randomBytes(3).toString('hex');
+        const newPassword = crypto.randomBytes(3).toString('hex');
         const Uploads = await prisma.uploads.create({
           data: {
             pastedText: pastedText,
             key: newKey,
             password: newPassword,
-            dad: dad,
+            dad: dad ?? false,
           },
         });
         logger.info(

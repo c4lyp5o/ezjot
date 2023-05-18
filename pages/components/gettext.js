@@ -71,53 +71,57 @@ export default function GetTextBox() {
   return (
     <form onSubmit={handleSubmit}>
       <div className='grid grid-flow-row gap-1'>
-        <div className='grid grid-flow-col gap-5 mb-2'>
-          <label htmlFor='key' className='text-gray-500'>
-            Key:{' '}
-          </label>
-          <input
-            className='border-2 border-lime-500 rounded-md'
-            name='key'
-            type='text'
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-          />
-          <label htmlFor='password' className='text-gray-500'>
-            Password:{' '}
-          </label>
-          <input
-            className='border-2 border-lime-500 rounded-md'
-            name='password'
-            type='text'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button
-            className='bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded'
-            type='button'
-            onClick={async (e) => checkPassword()}
-          >
-            Edit Text {editable ? '✅' : '❌'}
-          </button>
+        <div className='flex flex-col h-64 overflow-y-auto mb-2'>
+          {show ? (
+            <Editor
+              name='yourtext'
+              value={entry.pastedText}
+              ro={editable}
+              onChange={(text) => {
+                if (editable) {
+                  setEntry({ ...entry, pastedText: text });
+                }
+              }}
+            />
+          ) : null}
+          <div className='grid grid-cols-2 mb-2 text-center'>
+            <label htmlFor='key' className='text-gray-500'>
+              Key:{' '}
+              <input
+                className='border-2 border-lime-500 rounded-md m-auto'
+                name='key'
+                type='text'
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
+              />
+            </label>
+            <label htmlFor='password' className='text-gray-500'>
+              Password:{' '}
+              <input
+                className='border-2 border-lime-500 rounded-md m-auto'
+                name='password'
+                type='text'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className='grid grid-row-2 gap-1'>
+            <button
+              className='bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded mt-2'
+              type='button'
+              onClick={async (e) => checkPassword()}
+            >
+              Edit Text {editable ? '✅' : '❌'}
+            </button>
+            <Buttons type='clear' onClick={handleClear} />
+            {editable ? (
+              <Buttons type='saveEdit' onClick={saveEdit} />
+            ) : (
+              <Buttons type='get' />
+            )}
+          </div>
         </div>
-        {show ? (
-          <Editor
-            name='yourtext'
-            value={entry.pastedText}
-            ro={editable}
-            onChange={(text) => {
-              if (editable) {
-                setEntry({ ...entry, pastedText: text });
-              }
-            }}
-          />
-        ) : null}
-        <Buttons type='clear' onClick={handleClear} />
-        {editable ? (
-          <Buttons type='saveEdit' onClick={saveEdit} />
-        ) : (
-          <Buttons type='get' />
-        )}
       </div>
     </form>
   );
