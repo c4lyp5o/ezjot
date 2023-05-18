@@ -9,19 +9,16 @@ export default function Home() {
     <Fragment>
       <Head>
         <title>EZJOT</title>
-        <description>
-          EZJOT is a simple, easy to use, and secure way to jot down anything
-        </description>{' '}
-        <keywords>
-          EZJOT, jot, down, anything, simple, easy, secure, text, textbin,
-          textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io,
-          textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio,
-          textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io,
-          textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio,
-          textbin, textbin.io, textbinio, textbin.io, textbinio, textbin,
-          textbin.io, textbinio, textbin.io, textbinio
-        </keywords>{' '}
-        <author>c4lyp5o</author>
+        <link rel='icon' href='/favicon.ico' />
+        <meta charset='UTF-8' />
+        <meta name='description' content='NextJS Head component' />
+        <meta
+          name='keywords'
+          content='EZJOT, jot, down, anything, simple, easy, secure, text, textbin,
+          textbin.io, textbinio'
+        />
+        <meta name='author' content='c4lyp5o' />
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </Head>
       <main className='flex flex-col items-center justify-center w-full h-screen bg-black'>
         <div className='m-4'>
