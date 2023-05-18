@@ -30,10 +30,11 @@ saveAPI.post(async ({ body: { id, pastedText, dad, mode } }, res) => {
           dad: Uploads.dad,
         });
       } catch (error) {
+        console.log(error);
         res.status(500).json({
           status: 'Failed',
           code: 500,
-          error: 'Internal server error!',
+          msg: error,
         });
       }
       break;
