@@ -3,7 +3,9 @@ pipeline {
 
     environment {
         telegramBotToken = credentials('telegram-bot-token')
-        telegramChatId = credentials('telegram-chat-id')      
+        telegramChatId = credentials('telegram-chat-id')
+        ezjotAPIsalt = credntials('ezjotAPIsalt')
+        ezjotAPIkey = credntials('ezjotAPIkey')
     }
 
     stages {
@@ -12,6 +14,7 @@ pipeline {
                 sh "curl -sS https://api.telegram.org/bot$telegramBotToken/sendMessage -d chat_id=$telegramChatId -d text='🔨 Building ${env.JOB_NAME} #${env.BUILD_NUMBER}...'"
             }
         }
+
         stage('Purge') {
             steps {
                 echo 'Stopping container and removing current container..'
@@ -19,6 +22,19 @@ pipeline {
                 echo 'Done'
             }
         }
+
+        stage('Prepare environment') {
+            steps {
+                echo 'Creating .env file...'
+                writeFile file: '.env', text: """
+                    DATABASE_URL="file:../db/ezjot.db"
+                    API_SALT=${ezjotAPIsalt}
+                    API_KEY=${ezjotAPIkey}
+                """
+                echo 'Done'
+            }
+        }
+
         stage('Build') {
             steps {
                 echo 'Building new image..'
@@ -26,10 +42,11 @@ pipeline {
                 echo 'Done'
             }
         }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh "docker run -d -p 7171:3000 --name ezjot ezjot:latest"
+                sh "docker run -d -p 7171:3000 --name ezjot --env-file .env ezjot:latest"
                 echo 'Done'
             }
         }
