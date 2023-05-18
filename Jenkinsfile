@@ -4,8 +4,8 @@ pipeline {
     environment {
         telegramBotToken = credentials('telegram-bot-token')
         telegramChatId = credentials('telegram-chat-id')
-        ezjotAPIsalt = credentials('ezjotAPIsalt')
-        ezjotAPIkey = credentials('ezjotAPIkey')
+        // ezjotAPIsalt = credentials('ezjotAPIsalt')
+        // ezjotAPIkey = credentials('ezjotAPIkey')
     }
 
     stages {
@@ -21,40 +21,17 @@ pipeline {
                 sh "docker stop ezjot || true && docker rm ezjot || true"
                 echo 'Done'
             }
-        }
-
-        stage('Print current working directory') {
-            steps {
-                sh 'pwd'
-            }
-        }
+        }        
 
         stage('Prepare environment') {
             steps {
                 echo 'Creating .env file...'
                 writeFile file: '.env', text: """
-                    DATABASE_URL="file:../db/ezjot.db"
-                    API_SALT=$ezjotAPIsalt
-                    API_KEY=$ezjotAPIkey
-                """
-                echo 'Copying .env file...'
-                sh "cp .env $WORKSPACE/ezjot"
+                    DATABASE_URL="file:../db/ezjot.db"                    
+                """                
                 echo 'Done'
             }
-        }
-
-        // stage('Verify .env file') {
-        //     steps {
-        //         script {
-        //             def envFile = new File('.env')
-        //             if (!envFile.exists()) {
-        //                 error('.env file not found')
-        //             } else {
-        //                 echo '.env file found'
-        //             }
-        //         }
-        //     }
-        // }
+        }        
 
         stage('Build') {
             steps {
@@ -67,7 +44,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh "docker run -d -p 7171:3000 --name ezjot --env-file .env ezjot:latest"
+                sh "docker run -d -p 7171:3000 --name ezjot ezjot:latest"
                 echo 'Done'
             }
         }
