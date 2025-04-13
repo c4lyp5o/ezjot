@@ -1,9 +1,4 @@
-import {
-  auth,
-  logger,
-  withHelmet,
-  withBruteForce,
-} from '../../middleware/default';
+import { auth, withHelmet, withBruteForce } from '../../middleware/default';
 import nextConnect from 'next-connect';
 import prisma from '../../lib/prisma';
 import crypto from 'crypto';
@@ -25,9 +20,6 @@ saveAPI.post(async ({ body: { id, pastedText, dad, mode } }, res) => {
             dad: dad ?? false,
           },
         });
-        logger.info(
-          `New text uploaded with key: ${Uploads.key} and password: ${Uploads.password}`
-        );
         res.status(200).json({
           message: 'Text Uploaded',
           key: Uploads.key,
@@ -35,11 +27,11 @@ saveAPI.post(async ({ body: { id, pastedText, dad, mode } }, res) => {
           dad: Uploads.dad,
         });
       } catch (error) {
-        logger.error(error);
+        console.log(error);
         res.status(500).json({
           status: 'Failed',
           code: 500,
-          error: 'Internal server error!',
+          msg: error,
         });
       }
       break;

@@ -1,9 +1,4 @@
-import {
-  auth,
-  logger,
-  withHelmet,
-  withBruteForce,
-} from '../../middleware/default';
+import { auth, withHelmet, withBruteForce } from '../../middleware/default';
 import prisma from '../../lib/prisma';
 import nextConnect from 'next-connect';
 
@@ -15,7 +10,6 @@ getAPI.get(async (req, res) => {
   const { key, password, mode } = req.query;
 
   if (!key || !mode) {
-    logger.warn(`${req.method} ${req.url} No password / mode provided.`);
     return res.status(400).json({
       status: 'Failed',
       code: 400,
@@ -40,7 +34,6 @@ getAPI.get(async (req, res) => {
     }
     case 'r': {
       if (!password) {
-        logger.warn(`${req.method} ${req.url} User entered wrong password`);
         return res.status(400).json({
           status: 'Failed',
           code: 400,
@@ -64,7 +57,6 @@ getAPI.get(async (req, res) => {
           });
     }
     default:
-      logger.warn(`${req.method} ${req.url} No mode provided`);
       return res.status(400).json({
         status: 'Failed',
         code: 400,

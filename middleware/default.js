@@ -1,32 +1,32 @@
 import nextConnect from 'next-connect';
 import helmet from 'helmet';
 import expressBrute from 'express-brute';
-import log4js from 'log4js';
+// import log4js from 'log4js';
 
 const bruteStore = new expressBrute.MemoryStore();
 const bruteForce = new expressBrute(bruteStore);
 
-log4js.configure({
-  appenders: {
-    everything: {
-      type: 'file',
-      filename: 'logs/everything.log',
-      maxLogSize: 10485760,
-      backups: 3,
-      compress: true,
-      layout: {
-        type: 'pattern',
-        pattern: '%d %p %c - %m',
-      },
-    },
-  },
-  categories: {
-    default: { appenders: ['everything'], level: 'info' },
-  },
-});
+// log4js.configure({
+//   appenders: {
+//     everything: {
+//       type: 'file',
+//       filename: 'logs/everything.log',
+//       maxLogSize: 10485760,
+//       backups: 3,
+//       compress: true,
+//       layout: {
+//         type: 'pattern',
+//         pattern: '%d %p %c - %m',
+//       },
+//     },
+//   },
+//   categories: {
+//     default: { appenders: ['everything'], level: 'info' },
+//   },
+// });
 
-const logger = log4js.getLogger();
-logger.level = 'info';
+// const logger = log4js.getLogger();
+// logger.level = 'info';
 
 const auth = nextConnect({
   onError(error, req, res) {
@@ -35,9 +35,7 @@ const auth = nextConnect({
       .json({ error: `Sorry something Happened! ${error.message}` });
   },
   onNoMatch(req, res) {
-    res
-      .status(405)
-      .json({ error: `Method "${req.method}" Not Allowed` });
+    res.status(405).json({ error: `Method "${req.method}" Not Allowed` });
   },
   onBadRequest(req, res) {
     res.status(400).json({ error: `Bad Request` });
@@ -72,4 +70,4 @@ withHelmet.use(helmet());
 const withBruteForce = nextConnect();
 withBruteForce.use(bruteForce.prevent);
 
-export { auth, logger, withHelmet, withBruteForce };
+export { auth, withHelmet, withBruteForce };

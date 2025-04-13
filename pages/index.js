@@ -7,18 +7,25 @@ import GetTextBox from './components/gettext';
 export default function Home() {
   return (
     <Fragment>
-      <Head
-        title='EZJOT'
-        description='EZJOT is a simple, easy to use, and secure way to jot down anything.'
-        keywords='EZJOT, jot, down, anything, simple, easy, secure, text, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio, textbin, textbin.io, textbinio, textbin.io, textbinio'
-        author='c4lyp5o'
-      />
+      <Head>
+        <title>EZJOT</title>
+        <link rel='icon' href='/favicon.ico' />
+        <meta charset='UTF-8' />
+        <meta name='description' content='NextJS Head component' />
+        <meta
+          name='keywords'
+          content='EZJOT, jot, down, anything, simple, easy, secure, text, textbin,
+          textbin.io, textbinio'
+        />
+        <meta name='author' content='c4lyp5o' />
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+      </Head>
       <main className='flex flex-col items-center justify-center w-full h-screen bg-black'>
-        <div className='m-4'>
-          <h1 className='text-6xl font-bold text-white'>EZJOT</h1>
-          <p className='text-2xl text-white'>jot down anything</p>
+        <div className='m-4  text-white'>
+          <h1 className='text-6xl font-bold'>EZJOT</h1>
+          <p className='text-2xl'>jot down anything</p>
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-1 items-center justify-center w-full md:w-3/4 h-full'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-3 items-center justify-center w-full md:w-3/4 h-full'>
           <Textbox />
           <GetTextBox />
         </div>
