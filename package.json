@@ -3,44 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "install-server": "bun install",
+    "install-client": "cd client && bun install",
+    "install-deps": "bun run install-server && bun run install-client",
+    "dev-server": "bun --watch run server.js",
+    "dev-client": "cd client && bun run dev",
+    "dev": "conc \"bun dev-client\" \"bun dev-server\"",
+    "build-client": "cd client && bun run build",
+    "start": "NODE_ENV=production bun server.js"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^35.4.0",
-    "@ckeditor/ckeditor5-react": "^5.0.6",
-    "@next/font": "13.1.4",
-    "@prisma/client": "4.9.0",
-    "axios": "^1.2.3",
-    "eslint": "^8.32.0",
-    "eslint-config-next": "13.1.4",
-    "express-brute": "^1.0.1",
-    "express-rate-limit": "^6.7.0",
-    "helmet": "^6.0.1",
-    "log4js": "^6.7.1",
-    "next": "13.1.4",
-    "next-connect": "^0.13.0",
-    "prisma": "^4.9.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-icons": "^4.8.0",
-    "react-toastify": "^9.1.1"
+    "cors": "^2.8.5",
+    "deadslog": "^1.2.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^6.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@babel/eslint-parser": "^7.19.1",
-    "autoprefixer": "^10.4.13",
-    "babel-eslint": "^10.1.0",
-    "eslint-config-airbnb": "19.0.4",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.4"
+    "concurrently": "^9.1.2"
   }
 }
