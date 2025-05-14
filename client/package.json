@@ -10,8 +10,6 @@
     "preview": "bunx --bun vite preview"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^35.4.0",
-    "@ckeditor/ckeditor5-react": "^5.0.6",
     "@tailwindcss/vite": "^4.1.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
