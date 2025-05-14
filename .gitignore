@@ -8,13 +8,6 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
 # misc
 .DS_Store
 *.pem
@@ -29,15 +22,9 @@ yarn-error.log*
 .env*.local
 .env
 
-# vercel
-.vercel
-
-# local migrations
-prisma/migrations
-
 # local sqlite db
-db/ezjot.db
+database/*.sqlite
 
 # logs
-logs/everything.log
+logs/*.log
 
