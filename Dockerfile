@@ -45,7 +45,7 @@ COPY --from=builder /app/public /app/public
 RUN rc-service crond start
 
 # Copy purge script
-COPY purge.sh /etc/periodic/weekly/purge.sh
+COPY /utils/purge.sh /etc/periodic/weekly/purge.sh
 
 # Set permissions for the purge script
 RUN chmod +x /etc/periodic/weekly/purge.sh
