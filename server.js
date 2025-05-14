@@ -15,7 +15,7 @@ import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
 
-app.set('trust proxy', true);
+app.set('trust proxy', '172.18.0.0/16');
 
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), 'public')));
