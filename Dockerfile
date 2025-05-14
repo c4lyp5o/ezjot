@@ -1,5 +1,5 @@
 # Stage 1: Build Stage (client build)
-FROM oven/bun:1.2.12-alpine AS builder
+FROM oven/bun:1.2.13-alpine AS builder
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN mkdir -p /app/public && mv ../public/* /app/public/
 WORKDIR /app
 
 # Stage 2: Production Stage
-FROM oven/bun:1.2.12-alpine
+FROM oven/bun:1.2.13-alpine
 
 # Install for alpine
 RUN apk update --no-cache && \
