@@ -1,9 +1,7 @@
 const localAuth = (req, res, next) => {
-  const ip = req.ip || req.connection.remoteAddress;
+  const rawIp = req.connection.remoteAddress?.replace('::ffff:', '');
 
-  const normalizedIp = ip.replace('::ffff:', '');
-
-  if (normalizedIp === '127.0.0.1' || normalizedIp === '::1') {
+  if (rawIp === '127.0.0.1' || rawIp === '::1') {
     return next();
   }
 
