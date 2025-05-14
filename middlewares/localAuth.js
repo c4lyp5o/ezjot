@@ -1,8 +1,7 @@
 const localAuth = (req, res, next) => {
-  const allowedIps = ['127.0.0.1', '::1', '172.18.0.8'];
-
   const rawIp = req.connection.remoteAddress?.replace('::ffff:', '');
-  if (allowedIps.includes(rawIp)) {
+
+  if (rawIp === '127.0.0.1' || rawIp === '::1') {
     return next();
   }
 
