@@ -1,26 +1,26 @@
 {
-  "name": "ezjot",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "install-server": "bun install",
-    "install-client": "cd client && bun install",
-    "install-deps": "bun run install-server && bun run install-client",
-    "dev-server": "bun --watch run server.js",
-    "dev-client": "cd client && bun run dev",
-    "dev": "conc \"bun dev-client\" \"bun dev-server\"",
-    "build-client": "cd client && bun run build",
-    "start": "NODE_ENV=production bun server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "deadslog": "^1.2.0",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "express-rate-limit": "^7.5.0",
-    "helmet": "^6.0.1"
-  },
-  "devDependencies": {
-    "concurrently": "^9.1.2"
-  }
+	"name": "ezjot",
+	"version": "2.0.0",
+	"private": true,
+	"scripts": {
+		"install-server": "bun install",
+		"install-client": "cd client && bun install",
+		"install-deps": "bun run install-server && bun run install-client",
+		"dev-server": "bun --watch run server.js",
+		"dev-client": "cd client && bun run dev",
+		"dev": "conc \"bun dev-client\" \"bun dev-server\"",
+		"build-client": "cd client && bun run build",
+		"start": "NODE_ENV=production bun server.js"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"deadslog": "^1.2.0",
+		"dotenv": "^16.5.0",
+		"express": "^5.1.0",
+		"express-rate-limit": "^7.5.0",
+		"helmet": "^6.0.1"
+	},
+	"devDependencies": {
+		"concurrently": "^9.1.2"
+	}
 }
