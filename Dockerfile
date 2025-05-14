@@ -41,9 +41,6 @@ COPY . .
 # Copy built public files from builder
 COPY --from=builder /app/public /app/public
 
-# Run cron daemon
-RUN rc-service crond start
-
 # Copy purge script
 COPY /utils/purge.sh /etc/periodic/weekly/purge.sh
 
