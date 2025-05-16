@@ -1,36 +1,44 @@
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 
 import Spinner from "./Spinner";
 
-const TextDisplay = ({
-	allInfo,
-	setAllInfo,
-	loading,
-	handleClear,
-	handleSubmit,
-}) => {
+const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 	const maxCharacters = 1000;
 	const textareaRef = useRef(null);
 	const gutterRef = useRef(null);
 
-	const handleKeyChange = (event) => {
-		setAllInfo({
-			...allInfo,
-			key: event.target.value,
-		});
-	};
+	const handleKeyChange = useCallback(
+		(event) => {
+			setAllInfo((prev) => ({
+				...prev,
+				key: event.target.value,
+			}));
+		},
+		[setAllInfo],
+	);
 
-	const handlePasswordChange = (event) => {
-		setAllInfo({
-			...allInfo,
-			password: event.target.value,
-		});
-	};
+	const handlePasswordChange = useCallback(
+		(event) => {
+			setAllInfo((prev) => ({
+				...prev,
+				password: event.target.value,
+			}));
+		},
+		[setAllInfo],
+	);
 
-	const handleScroll = (e) => {
+	const handleScroll = (event) => {
 		if (gutterRef.current) {
-			gutterRef.current.scrollTop = e.target.scrollTop;
+			gutterRef.current.scrollTop = event.target.scrollTop;
 		}
+	};
+
+	const handleClear = () => {
+		setAllInfo({
+			key: "",
+			password: "",
+			text: "",
+		});
 	};
 
 	return (
