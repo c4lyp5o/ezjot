@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 const Landing = React.lazy(() => import("./pages/Landing"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
-function App() {
+const App = () => {
 	return (
 		<>
 			<ToastContainer
@@ -29,6 +29,6 @@ function App() {
 			</BrowserRouter>
 		</>
 	);
-}
+};
 
 export default App;

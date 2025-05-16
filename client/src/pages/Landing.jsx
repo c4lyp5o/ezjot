@@ -1,7 +1,7 @@
 import SaveText from "../components/SaveText";
 import GetText from "../components/GetText";
 
-function Landing() {
+const Landing = () => {
 	return (
 		<>
 			<title>EZJOT</title>
@@ -25,6 +25,6 @@ function Landing() {
 			</div>
 		</>
 	);
-}
+};
 
 export default Landing;

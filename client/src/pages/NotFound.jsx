@@ -1,4 +1,4 @@
-function NotFound() {
+const NotFound = () => {
 	return (
 		<>
 			<title>Not Found</title>
@@ -21,6 +21,6 @@ function NotFound() {
 			</div>
 		</>
 	);
-}
+};
 
 export default NotFound;
