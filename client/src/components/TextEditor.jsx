@@ -2,13 +2,7 @@ import { useState, useCallback } from "react";
 
 import Spinner from "./Spinner";
 
-const TextEditor = ({
-	allInfo,
-	setAllInfo,
-	loading,
-	handleClear,
-	handleSubmit,
-}) => {
+const TextEditor = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const maxCharacters = 1000;
@@ -16,33 +10,42 @@ const TextEditor = ({
 
 	const handleTextChange = useCallback(
 		(event) => {
-			setAllInfo({
-				...allInfo,
+			setAllInfo((prev) => ({
+				...prev,
 				text: event.target.value,
-			});
+			}));
 		},
-		[allInfo, setAllInfo],
+		[setAllInfo],
 	);
 
 	const handlePasswordChange = useCallback(
 		(event) => {
-			setAllInfo({
-				...allInfo,
+			setAllInfo((prev) => ({
+				...prev,
 				password: event.target.value,
-			});
+			}));
 		},
-		[allInfo, setAllInfo],
+		[setAllInfo],
 	);
 
 	const handleBurnAfterReadingChange = useCallback(
 		(event) => {
-			setAllInfo({
-				...allInfo,
+			setAllInfo((prev) => ({
+				...prev,
 				burnAfterReading: event.target.checked,
-			});
+			}));
 		},
-		[allInfo, setAllInfo],
+		[setAllInfo],
 	);
+
+	const handleClear = async () => {
+		setAllInfo({
+			text: "",
+			password: "",
+			burnAfterReading: false,
+			key: "",
+		});
+	};
 
 	const handleShowPasswordToggle = () => setShowPassword((prev) => !prev);
 
