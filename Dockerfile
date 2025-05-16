@@ -23,7 +23,7 @@ FROM oven/bun:1.2.13-alpine
 
 # Install for alpine
 RUN apk update --no-cache && \
-    apk add --no-cache curl tzdata openrc
+    apk add --no-cache curl tzdata
 
 # Set timezone data
 ENV TZ=Asia/Kuala_Lumpur
