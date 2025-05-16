@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 
 import Spinner from "./Spinner";
 
@@ -6,6 +6,8 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 	const maxCharacters = 1000;
 	const textareaRef = useRef(null);
 	const gutterRef = useRef(null);
+
+	const [showPassword, setShowPassword] = useState(false);
 
 	const handleKeyChange = useCallback(
 		(event) => {
@@ -33,16 +35,18 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 		}
 	};
 
-	const handleClear = () => {
+	const handleClear = useCallback(() => {
 		setAllInfo({
 			key: "",
 			password: "",
 			text: "",
 		});
-	};
+	}, [setAllInfo]);
+
+	const handleShowPasswordToggle = () => setShowPassword((prev) => !prev);
 
 	return (
-		<div className="flex flex-col items-center justify-center p-5 bg-gray-100 border border-gray-300 rounded-lg shadow-md w-11/12 mx-auto">
+		<div className="flex flex-col items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg shadow-md w-11/12 mx-auto">
 			<label htmlFor="yoursoontobetext" className="sr-only">
 				Text Output
 			</label>
@@ -92,7 +96,7 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 			<div className="flex w-full mt-2 justify-end">
 				<button
 					type="button"
-					className="px-2 py-1 text-xs text-gray-600 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+					className="px-2 py-1 text-xs text-gray-600 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2"
 					onClick={() => {
 						if (allInfo.text) {
 							navigator.clipboard.writeText(allInfo.text);
@@ -104,28 +108,21 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 					Copy
 				</button>
 			</div>
-			<label htmlFor="key-input" className="sr-only">
-				Key
-			</label>
 			<input
 				type="text"
-				className="w-full mt-4 p-4 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+				className="w-full p-1 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-12 mb-2"
 				value={allInfo.key}
 				onChange={handleKeyChange}
 				placeholder="Enter key"
 				id="key-input"
 				aria-label="Enter key"
 				autoComplete="off"
-				required
 				disabled={loading}
 			/>
-			<label htmlFor="password-input-main" className="sr-only">
-				Password (optional)
-			</label>
-			<div className="relative w-full mt-4">
+			<div className="relative w-full">
 				<input
 					type={allInfo.showPassword ? "text" : "password"}
-					className="w-full p-4 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-12"
+					className="w-full p-1 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-12"
 					value={allInfo.password}
 					onChange={handlePasswordChange}
 					placeholder="Enter password (optional)"
@@ -137,36 +134,34 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 				<button
 					type="button"
 					className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-600 bg-gray-200 rounded px-2 py-1 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-					onClick={() =>
-						setAllInfo({ ...allInfo, showPassword: !allInfo.showPassword })
-					}
+					onClick={handleShowPasswordToggle}
 					disabled={loading || allInfo.password === ""}
 					tabIndex={-1}
 					aria-pressed={allInfo.showPassword}
 					aria-label={allInfo.showPassword ? "Hide password" : "Show password"}
 				>
-					{allInfo.showPassword ? "Hide" : "Show"}
+					{showPassword ? "Hide" : "Show"}
 				</button>
 			</div>
-			<div className="flex justify-between w-full mt-4">
+			<div className="flex space-x-2 w-full mt-4">
 				<button
 					type="button"
-					className="px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-					onClick={handleClear}
-					aria-label="Clear Text"
-				>
-					Clear
-				</button>
-				<button
-					type="button"
-					className="px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+					className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-150 disabled:opacity-50"
 					onClick={handleSubmit}
 					disabled={loading}
 					aria-label="Get text"
 					aria-disabled={loading}
 				>
-					{loading ? <Spinner /> : null}
-					Get Text
+					{/* {loading ? <Spinner /> : null} */}
+					{loading ? "Getting..." : "Get"}
+				</button>
+				<button
+					type="button"
+					className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors duration-150"
+					onClick={handleClear}
+					aria-label="Clear form"
+				>
+					Clear
 				</button>
 			</div>
 		</div>

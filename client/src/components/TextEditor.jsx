@@ -50,12 +50,12 @@ const TextEditor = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 	const handleShowPasswordToggle = () => setShowPassword((prev) => !prev);
 
 	return (
-		<div className="flex flex-col items-center justify-center p-5 bg-gray-100 border border-gray-300 rounded-lg shadow-md w-11/12 mx-auto">
+		<div className="flex flex-col items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg shadow-md w-11/12 mx-auto">
 			<label htmlFor="yoursoontobetext" className="sr-only">
 				Text Area
 			</label>
 			<textarea
-				className="w-full h-48 p-3 text-base font-mono text-gray-800 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+				className="w-full h-48 p-3 text-base font-mono text-gray-800 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-1"
 				style={{ lineHeight: "1.5", height: "12rem" }}
 				value={allInfo.text}
 				onChange={handleTextChange}
@@ -81,16 +81,13 @@ const TextEditor = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 				placeholder="Paste your text here..."
 				aria-label="Text Area"
 			/>
-			<div className="w-full text-right text-xs text-gray-500 mt-1">
+			<div className="w-full text-right text-xs text-gray-500 mb-2">
 				{characterCount}/{maxCharacters} characters
 			</div>
-			<label htmlFor="password-input" className="sr-only">
-				Password
-			</label>
-			<div className="relative w-full mt-4">
+			<div className="relative w-full">
 				<input
 					type={showPassword ? "text" : "password"}
-					className="w-full p-4 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-12"
+					className="w-full p-1 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-12"
 					value={allInfo.password}
 					onChange={handlePasswordChange}
 					placeholder="Enter a password (optional)"
@@ -111,7 +108,7 @@ const TextEditor = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 					{showPassword ? "Hide" : "Show"}
 				</button>
 			</div>
-			<div className="flex items-center mt-4">
+			<div className="flex items-center mt-4 mb-4">
 				<input
 					type="checkbox"
 					id="burnAfterReading"
@@ -125,28 +122,28 @@ const TextEditor = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 					Burn after reading
 				</label>
 			</div>
-			<div className="flex justify-between w-full mt-4">
+			<div className="flex space-x-2 w-full">
 				<button
 					type="button"
-					className="px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-					onClick={handleClear}
-					aria-label="Clear Text"
-				>
-					Clear
-				</button>
-				<button
-					type="button"
-					className="px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
+					className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-150 disabled:opacity-50"
 					onClick={handleSubmit}
 					disabled={loading}
 					aria-label="Save Text"
 					aria-disabled={loading}
 				>
-					{loading ? <Spinner /> : null}
-					Save Text
+					{/* {loading ? <Spinner /> : null} */}
+					{loading ? "Saving..." : "Save"}
+				</button>
+				<button
+					type="button"
+					className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors duration-150"
+					onClick={handleClear}
+					aria-label="Clear File"
+				>
+					Clear
 				</button>
 			</div>
-			<div className="w-full text-xs text-gray-600 text-right mt-1">
+			<div className="w-full text-xs text-gray-600 text-left mt-1">
 				Use Shift+Enter or Ctrl+Enter to save.
 			</div>
 		</div>
