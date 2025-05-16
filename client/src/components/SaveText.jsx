@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import TextEditor from "./TextEditor";
 
-function SaveText() {
+const SaveText = () => {
 	const [allInfo, setAllInfo] = useState({
 		text: "",
 		password: "",
@@ -50,22 +50,12 @@ function SaveText() {
 		}
 	};
 
-	const handleClear = async () => {
-		setAllInfo({
-			text: "",
-			password: "",
-			burnAfterReading: false,
-			key: "",
-		});
-	};
-
 	return (
 		<>
 			<TextEditor
 				allInfo={allInfo}
 				setAllInfo={setAllInfo}
 				loading={loading}
-				handleClear={handleClear}
 				handleSubmit={handleSubmit}
 				aria-label="Text Editor"
 			/>
@@ -140,6 +130,6 @@ function SaveText() {
 			)}
 		</>
 	);
-}
+};
 
 export default SaveText;

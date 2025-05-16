@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import TextDisplay from "./TextDisplay";
 
-export default function GetText() {
+const GetText = () => {
 	const [allInfo, setAllInfo] = useState({
 		key: "",
 		password: "",
@@ -48,14 +48,6 @@ export default function GetText() {
 		}
 	};
 
-	const handleClear = () => {
-		setAllInfo({
-			key: "",
-			password: "",
-			text: "",
-		});
-	};
-
 	return (
 		<>
 			<TextDisplay
@@ -63,9 +55,8 @@ export default function GetText() {
 				setAllInfo={setAllInfo}
 				loading={loading}
 				handleSubmit={handleSubmit}
-				handleClear={handleClear}
 				aria-label="Text Display"
 			/>
 		</>
 	);
-}
+};
