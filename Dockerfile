@@ -1,24 +1,13 @@
-# Stage 1: Build Stage (client build)
+# Stage 1: Build the client
 FROM oven/bun:1.2.13-alpine AS builder
 
 WORKDIR /app
 
-# Install root dependencies (Express etc.)
-COPY package*.json ./
-RUN bun install
-
-# Copy client separately and install client dependencies + build
 COPY client ./client
 WORKDIR /app/client
 RUN bun install && bun run build
 
-# Move built files to /app/public in the builder stage
-RUN mkdir -p /app/public && mv ../public/* /app/public/
-
-# Return to root app dir
-WORKDIR /app
-
-# Stage 2: Production Stage
+# Stage 2: Production
 FROM oven/bun:1.2.13-alpine
 
 # Install for alpine
@@ -27,24 +16,22 @@ RUN apk update --no-cache && \
 
 # Set timezone data
 ENV TZ=Asia/Kuala_Lumpur
+ENV NODE_ENV=production
 
-# Set working directory
 WORKDIR /app
 
 # Install only production dependencies
-COPY package*.json ./
+COPY package.json bun.lock ./
 RUN bun install --production
 
-# Copy backend source code (everything except what's ignored)
-COPY . .
+# Copy backend source code
+COPY backend ./backend
 
-# Copy built public files from builder
+# Copy built client files from the builder
 COPY --from=builder /app/public /app/public
 
-# Copy purge script
-COPY /utils/purge.sh /etc/periodic/weekly/purge.sh
-
-# Set permissions for the purge script
+# Copy purge script (runs weekly via the container's cron)
+COPY utils/purge.sh /etc/periodic/weekly/purge.sh
 RUN chmod +x /etc/periodic/weekly/purge.sh
 
 # Expose your server port

@@ -1,9 +1,7 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/ for more information.
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
 
 # testing
 /coverage
@@ -23,8 +21,11 @@ yarn-error.log*
 .env
 
 # local sqlite db
-database/*.sqlite
+db/*.sqlite
+db/*.sqlite-*
+
+# built client output
+/public
 
 # logs
 logs/*.log
-
