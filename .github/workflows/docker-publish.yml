@@ -9,6 +9,9 @@ on:
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
     - name: 🧾 Checkout source
@@ -21,11 +24,12 @@ jobs:
     - name: 🐳 Setup Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: 🐳 Docker Login
+    - name: 🐳 Docker Login (GHCR)
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 🛠️ Build & Push Docker Image
       uses: docker/build-push-action@v5
@@ -33,15 +37,19 @@ jobs:
         context: .
         push: true
         tags: |
-          calypso666/ezjot:${{ steps.package-version.outputs.version }}
-          calypso666/ezjot:latest
+          ghcr.io/c4lyp5o/ezjot:${{ steps.package-version.outputs.version }}
+          ghcr.io/c4lyp5o/ezjot:latest
 
     - name: 🔔 Notify ntfy
       if: always()
+      env:
+        NTFY_URL: ${{ secrets.NTFY_URL }}
       run: |
-        curl \
-          -H "Title: Build ${{ job.status }}: ezjot:${{ steps.package-version.outputs.version }}" \
-          -H "Priority: ${{ job.status == 'success' && 'default' || 'high' }}" \
-          -H "Tags: ${{ job.status == 'success' && 'white_check_mark' || 'x' }},rocket" \
-          -d "Branch: ${{ github.ref_name }} | Status: ${{ job.status }}" \
-          ${{ secrets.NTFY_URL }}
+        if [ -n "$NTFY_URL" ]; then
+          curl \
+            -H "Title: Build ${{ job.status }}: ezjot:${{ steps.package-version.outputs.version }}" \
+            -H "Priority: ${{ job.status == 'success' && 'default' || 'high' }}" \
+            -H "Tags: ${{ job.status == 'success' && 'white_check_mark' || 'x' }},rocket" \
+            -d "Branch: ${{ github.ref_name }} | Status: ${{ job.status }}" \
+            "$NTFY_URL"
+        fi
