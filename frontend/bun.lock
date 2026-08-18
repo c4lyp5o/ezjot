@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "client",
+      "name": "frontend",
       "dependencies": {
         "@tailwindcss/vite": "^4.3.3",
         "react": "^19.2.8",

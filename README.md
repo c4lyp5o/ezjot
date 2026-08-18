@@ -27,16 +27,16 @@ EZJOT is a lightweight, web-based note-taking application. Access it online at [
 Requires [Bun](https://bun.sh/) ≥ 1.2.
 
 ```bash
-bun run install-deps   # backend + client dependencies
-bun dev                # runs API (port 5000) + Vite dev client together
-bun run build-client   # production client build into public/
-bun start              # serve API + built client on port 5000
-bun test               # backend test suite
+bun install             # backend + frontend dependencies
+bun dev                 # runs API (port 5000) + Vite dev frontend together
+bun run build:client    # production frontend build into public/
+bun start               # serve API + built frontend on port 5000
+bun test                # backend test suite
 ```
 
 ## Running as a Docker Container
 
-The Dockerfile builds the client, runs the API as a non-root user, and
+The Dockerfile builds the frontend, runs the API as a non-root user, and
 auto-creates the database.
 
 ```bash

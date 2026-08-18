@@ -1,10 +1,10 @@
-# Stage 1: Build the client
+# Stage 1: Build the frontend
 FROM oven/bun:1.2.13-alpine AS builder
 
 WORKDIR /app
 
-COPY client ./client
-WORKDIR /app/client
+COPY frontend ./frontend
+WORKDIR /app/frontend
 RUN bun install && bun run build
 
 # Stage 2: Production
@@ -22,14 +22,15 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-# Install only production dependencies
+# Install only production dependencies (--ignore-scripts: the root `install`
+# script is a user-facing convenience, not a lifecycle hook for builds)
 COPY package.json bun.lock ./
-RUN bun install --production
+RUN bun install --production --ignore-scripts
 
 # Copy backend source code
 COPY backend ./backend
 
-# Copy built client files from the builder
+# Copy built frontend files from the builder
 COPY --from=builder /app/public /app/public
 
 # Copy purge script (runs weekly via the container's cron)
