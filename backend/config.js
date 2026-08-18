@@ -6,6 +6,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 
 export const PORT = process.env.PORT !== undefined ? Number(process.env.PORT) : 5000;
 export const DB_DIR = path.join(HERE, "../db");
+export const DB_PATH = process.env.DB_PATH || path.join(DB_DIR, "ezjot.sqlite");
 export const LOG_DIR = path.join(HERE, "../logs");
 export const PUBLIC_DIR = path.join(HERE, "../public");
 

@@ -12,21 +12,23 @@ const App = () => {
 				position="top-right"
 				autoClose={3000}
 				hideProgressBar={false}
-				newestOnTop={false}
+				newestOnTop
 				closeOnClick
 				rtl={false}
 				pauseOnFocusLoss
 				draggable
 				pauseOnHover
 				theme="light"
+				toastClassName="!rounded-lg !text-sm !shadow-sm"
 			/>
-			<BrowserRouter>
-				<Routes>
-					<Route index element={<Landing />} />
-
-					<Route path="*" element={<NotFound />} />
-				</Routes>
-			</BrowserRouter>
+			<React.Suspense fallback={null}>
+				<BrowserRouter>
+					<Routes>
+						<Route index element={<Landing />} />
+						<Route path="*" element={<NotFound />} />
+					</Routes>
+				</BrowserRouter>
+			</React.Suspense>
 		</>
 	);
 };

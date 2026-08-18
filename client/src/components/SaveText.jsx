@@ -10,6 +10,7 @@ const SaveText = () => {
 		key: "",
 	});
 	const [loading, setLoading] = useState(false);
+	const [copied, setCopied] = useState(false);
 
 	const handleSubmit = async () => {
 		if (allInfo.text.trim() === "") return toast.error("Nothing to save");
@@ -30,23 +31,35 @@ const SaveText = () => {
 			});
 
 			if (!response.ok) {
-				const errorData = await response.json();
-				throw new Error(
-					errorData.message || `HTTP error! status: ${response.status}`,
-				);
+				let message = `HTTP error! status: ${response.status}`;
+				try {
+					const errorData = await response.json();
+					if (errorData?.message) message = errorData.message;
+				} catch {
+					/* non-JSON error body */
+				}
+				throw new Error(message);
 			}
 
-			const key = await response.json();
-			setAllInfo({
-				...allInfo,
-				key,
-			});
+			// API returns the key as a bare string (OpenAPI: t.String()).
+			const key = await response.text();
+			setAllInfo((prev) => ({ ...prev, key }));
+			setCopied(false);
 			toast.success("Saved");
 		} catch (error) {
-			//   console.error('Error during save operation:', error);
-			toast.error("Something went wrong!");
+			toast.error(error.message || "Something went wrong!");
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const handleCopyKey = async () => {
+		try {
+			await navigator.clipboard.writeText(allInfo.key);
+			setCopied(true);
+			toast.success("Key copied");
+		} catch {
+			toast.error("Could not copy key");
 		}
 	};
 
@@ -60,71 +73,24 @@ const SaveText = () => {
 				aria-label="Text Editor"
 			/>
 			{allInfo?.key && (
-				<div
-					className="flex flex-col items-center justify-center p-5 bg-white border border-blue-300 rounded-lg shadow-lg w-11/12 mx-auto mt-3"
-					aria-live="polite"
-				>
-					<h2 className="text-lg font-semibold text-blue-700 mb-2">
-						Your Paste Credentials
-					</h2>
-					<div
-						className={
-							allInfo.password
-								? "grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-md"
-								: "flex flex-col items-center w-full max-w-md"
-						}
-					>
-						<div className="flex flex-col items-start mb-1">
-							<span className="text-gray-600 text-sm mb-1" id="key-label">
-								Key:
-							</span>
-							<div className="flex items-center space-x-2 w-full">
-								<span
-									className="font-mono text-base bg-gray-200 px-2 py-1 rounded select-all"
-									data-testid="key-value"
-									aria-labelledby="key-label"
-								>
-									{allInfo.key}
-								</span>
-								<button
-									className="px-2 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150"
-									onClick={() => navigator.clipboard.writeText(allInfo.key)}
-									aria-label="Copy key to clipboard"
-									type="button"
-								>
-									Copy
-								</button>
-							</div>
-						</div>
-						{allInfo?.password && (
-							<div className="flex flex-col items-start mb-1">
-								<span
-									className="text-gray-600 text-sm mb-1"
-									id="password-label"
-								>
-									Password:
-								</span>
-								<div className="flex items-center space-x-2 w-full">
-									<span
-										className="font-mono text-base bg-gray-200 px-2 py-1 rounded select-all"
-										data-testid="password-value"
-										aria-labelledby="password-label"
-									>
-										{allInfo.password}
-									</span>
-									<button
-										className="px-2 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150"
-										onClick={() =>
-											navigator.clipboard.writeText(allInfo.password)
-										}
-										aria-label="Copy password to clipboard"
-										type="button"
-									>
-										Copy
-									</button>
-								</div>
-							</div>
-						)}
+				<div className="w-full mt-4 bg-white border border-stone-200 rounded-xl shadow-sm">
+					<div className="px-4 py-3 border-b border-stone-100">
+						<p className="text-sm font-semibold text-stone-700">Your key</p>
+						<p className="text-xs text-stone-400 mt-0.5">
+							Use it to retrieve the jot — it&apos;s the only way back.
+						</p>
+					</div>
+					<div className="px-4 py-3 flex items-center gap-2">
+						<code className="flex-1 px-3 py-2 font-mono text-sm text-accent-700 bg-accent-50 border border-accent-100 rounded-lg break-all">
+							{allInfo.key}
+						</code>
+						<button
+							type="button"
+							onClick={handleCopyKey}
+							className="px-3 py-2 text-sm font-medium text-accent-700 bg-accent-50 border border-accent-200 hover:bg-accent-100 rounded-lg transition-colors"
+						>
+							{copied ? "Copied" : "Copy"}
+						</button>
 					</div>
 				</div>
 			)}

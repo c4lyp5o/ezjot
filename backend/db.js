@@ -1,14 +1,12 @@
 import path from "node:path";
 import { mkdirSync } from "node:fs";
 import { Database } from "bun:sqlite";
-import { DB_DIR } from "./config";
+import { DB_PATH } from "./config";
 import { generalLogger as logger } from "./logger";
 
-mkdirSync(DB_DIR, { recursive: true });
+mkdirSync(path.dirname(DB_PATH), { recursive: true });
 
-const dbPath = path.join(DB_DIR, "ezjot.sqlite");
-
-const db = new Database(dbPath, { create: true });
+const db = new Database(DB_PATH, { create: true });
 
 db.run("PRAGMA journal_mode = WAL;");
 db.run("PRAGMA busy_timeout = 5000;");
@@ -24,6 +22,6 @@ CREATE TABLE IF NOT EXISTS pastes (
 )
 `);
 
-logger.info(`[db] Database ready at ${dbPath}`);
+logger.info(`[db] Database ready at ${DB_PATH}`);
 
 export default db;

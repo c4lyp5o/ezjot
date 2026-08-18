@@ -11,51 +11,45 @@ EZJOT is a lightweight, web-based note-taking application. Access it online at [
 - Fast and minimal note-taking
 - Accessible from any browser
 - Simple, distraction-free interface
+- Save text up to **1000 characters**, retrieve with a key
+- Optional password protection
+- **Burn after reading** — text deletes itself after one read
+- **Autopurge** — stale pastes are removed nightly by cron
+
+## Tech Stack
+
+- **Backend:** Bun + [Elysia](https://elysiajs.com), SQLite, OpenAPI at `/api/v1`
+- **Frontend:** React (Vite), Tailwind CSS v4
+- **Other:** Docker (non-root), daily purge cron, CSP + security headers
 
 ## Getting Started
 
-To run EZJOT locally, you need the [Bun](https://bun.sh/) runtime.
-
-1. **Install dependencies:**
+Requires [Bun](https://bun.sh/) ≥ 1.2.
 
 ```bash
-bun run install-deps
+bun run install-deps   # backend + client dependencies
+bun dev                # runs API (port 5000) + Vite dev client together
+bun run build-client   # production client build into public/
+bun start              # serve API + built client on port 5000
+bun test               # backend test suite
 ```
-
-4. **Run the server:**
-
-```bash
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Running as a Docker Container
 
-A Dockerfile is included. The database is created automatically in the container.
+The Dockerfile builds the client, runs the API as a non-root user, and
+auto-creates the database.
 
 ```bash
 docker build . -t ezjot
-docker run -p <desired host port>:5000 --name ezjot ezjot:latest
+docker run -p <desired host port>:5000 -v ezjot-db:/app/db ezjot:latest
 ```
 
-## Features
-
-1. **Text Save** - Save text up to 1000 characters. Get a key for each upload.
-2. **Text Get** - Get text using the key. Optional password protection.
-3. **Burn After Reading** - Option to delete a text after it is read once.
-4. **Autopurge** - Files are automatically deleted every day at 2:00 am.
+The weekly purge cron runs inside the container.
 
 ## Limitations
 
 - Maximum character limit: **1000** characters per text.
 - No user accounts or permanent storage. Texts are temporary.
-
-## Tech Stack
-
-- **Backend:** Bun, Express-style routing, SQLite, Multer for file uploads
-- **Frontend:** React (Vite), Tailwind CSS
-- **Other:** Docker support, daily purge script
 
 ## License
 

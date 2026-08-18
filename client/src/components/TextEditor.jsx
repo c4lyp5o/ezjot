@@ -50,101 +50,102 @@ const TextEditor = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 	const handleShowPasswordToggle = () => setShowPassword((prev) => !prev);
 
 	return (
-		<div className="flex flex-col items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg shadow-md w-11/12 mx-auto">
+		<div className="w-full bg-white border border-stone-200 rounded-xl shadow-sm">
+			<div className="flex items-center justify-between px-4 py-3 border-b border-stone-100">
+				<h2 className="text-sm font-semibold text-stone-700">New jot</h2>
+				<span
+					className={`font-mono text-xs ${
+						characterCount >= maxCharacters
+							? "text-rose-600"
+							: "text-stone-400"
+					}`}
+				>
+					{characterCount}/{maxCharacters}
+				</span>
+			</div>
+
 			<label htmlFor="yoursoontobetext" className="sr-only">
 				Text Area
 			</label>
 			<textarea
-				className="w-full h-48 p-3 text-base font-mono text-gray-800 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-1"
-				style={{ lineHeight: "1.5", height: "12rem" }}
+				id="yoursoontobetext"
+				className="w-full p-4 text-sm font-mono leading-relaxed text-stone-800 bg-paper resize-none focus:outline-none focus:ring-2 focus:ring-accent-400/40 transition-shadow"
+				style={{ height: "12rem" }}
 				value={allInfo.text}
 				onChange={handleTextChange}
 				onKeyDown={(event) => {
-					if (
-						(event.key === "Enter" && event.shiftKey) ||
-						(event.key === "Enter" && event.ctrlKey)
-					) {
+					if (event.key === "Enter" && !event.shiftKey) {
 						event.preventDefault();
 						handleSubmit();
 					}
 				}}
-				rows={4}
-				cols={50}
-				name="yoursoontobetext"
-				id="yoursoontobetext"
-				readOnly={false}
-				autoComplete="off"
-				autoCorrect="off"
-				spellCheck="false"
-				autoCapitalize="none"
+				placeholder="Jot something down…"
 				maxLength={maxCharacters}
-				placeholder="Paste your text here..."
-				aria-label="Text Area"
+				disabled={loading}
 			/>
-			<div className="w-full text-right text-xs text-gray-500 mb-2">
-				{characterCount}/{maxCharacters} characters
-			</div>
-			<div className="relative w-full">
-				<input
-					type={showPassword ? "text" : "password"}
-					className="w-full p-1 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-12"
-					value={allInfo.password}
-					onChange={handlePasswordChange}
-					placeholder="Enter a password (optional)"
-					id="password-input"
-					aria-label="Password (optional)"
-					autoComplete="off"
-					disabled={loading}
-				/>
-				<button
-					type="button"
-					className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-600 bg-gray-200 rounded px-2 py-1 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-					onClick={handleShowPasswordToggle}
-					disabled={loading || allInfo.password === ""}
-					tabIndex={-1}
-					aria-pressed={showPassword}
-					aria-label={showPassword ? "Hide password" : "Show password"}
-				>
-					{showPassword ? "Hide" : "Show"}
-				</button>
-			</div>
-			<div className="flex items-center mt-4 mb-4">
-				<input
-					type="checkbox"
-					id="burnAfterReading"
-					className="mr-2 h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-					checked={allInfo.burnAfterReading}
-					onChange={handleBurnAfterReadingChange}
-					aria-checked={allInfo.burnAfterReading}
-					aria-label="Burn after reading"
-				/>
-				<label htmlFor="burnAfterReading" className="text-gray-700">
+
+			<div className="px-4 py-3 border-t border-stone-100 space-y-3">
+				<div>
+					<label
+						htmlFor="editor-password"
+						className="block text-xs font-medium text-stone-500 mb-1"
+					>
+						Password <span className="font-normal text-stone-400">(optional)</span>
+					</label>
+					<div className="relative">
+						<input
+							id="editor-password"
+							type={showPassword ? "text" : "password"}
+							className="w-full px-3 py-2 pr-16 text-sm font-mono text-stone-800 bg-white border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-400/40 focus:border-accent-500 transition-shadow"
+							placeholder="Lock this jot"
+							value={allInfo.password}
+							onChange={handlePasswordChange}
+							disabled={loading}
+						/>
+						<button
+							type="button"
+							onClick={handleShowPasswordToggle}
+							className="absolute inset-y-0 right-0 px-3 text-[11px] font-semibold tracking-wide text-stone-400 hover:text-accent-600 transition-colors"
+							aria-label={showPassword ? "Hide password" : "Show password"}
+						>
+							{showPassword ? "HIDE" : "SHOW"}
+						</button>
+					</div>
+				</div>
+
+				<label className="flex items-center gap-2 text-sm text-stone-600 select-none cursor-pointer">
+					<input
+						type="checkbox"
+						checked={allInfo.burnAfterReading}
+						onChange={handleBurnAfterReadingChange}
+						disabled={loading}
+						className="w-4 h-4 rounded accent-accent-600"
+					/>
 					Burn after reading
 				</label>
-			</div>
-			<div className="flex space-x-2 w-full">
-				<button
-					type="button"
-					className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-150 disabled:opacity-50"
-					onClick={handleSubmit}
-					disabled={loading}
-					aria-label="Save Text"
-					aria-disabled={loading}
-				>
-					{/* {loading ? <Spinner /> : null} */}
-					{loading ? "Saving..." : "Save"}
-				</button>
-				<button
-					type="button"
-					className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors duration-150"
-					onClick={handleClear}
-					aria-label="Clear File"
-				>
-					Clear
-				</button>
-			</div>
-			<div className="w-full text-xs text-gray-600 text-left mt-1">
-				Use Shift+Enter or Ctrl+Enter to save.
+
+				<div className="flex gap-2 pt-1">
+					<button
+						type="button"
+						onClick={handleSubmit}
+						disabled={loading}
+						className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-accent-600 hover:bg-accent-700 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+					>
+						{loading ? <Spinner /> : null}
+						{loading ? "Saving…" : "Save jot"}
+					</button>
+					<button
+						type="button"
+						onClick={handleClear}
+						disabled={loading}
+						className="px-4 py-2.5 text-sm font-medium text-stone-600 bg-white border border-stone-300 hover:bg-stone-50 rounded-lg transition-colors disabled:opacity-60"
+					>
+						Clear
+					</button>
+				</div>
+				<p className="text-[11px] text-stone-400">
+					Enter to save · Shift+Enter for a new line
+				</p>
 			</div>
 		</div>
 	);

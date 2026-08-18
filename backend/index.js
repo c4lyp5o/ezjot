@@ -31,7 +31,10 @@ export const app = new Elysia()
 				if (existsSync(indexHtml)) {
 					return new Response(Bun.file(indexHtml), {
 						status: 200,
-						headers: { "Content-Type": "text/html; charset=utf-8" },
+						headers: {
+							"Content-Type": "text/html; charset=utf-8",
+							"Cache-Control": "no-cache",
+						},
 					});
 				}
 			}
@@ -51,10 +54,26 @@ export const app = new Elysia()
 	})
 
 	// Minimal security headers — the core value helmet used to provide.
-	.onRequest(({ set }) => {
+	.onRequest(({ set, request }) => {
 		set.headers["X-Content-Type-Options"] = "nosniff";
 		set.headers["X-Frame-Options"] = "DENY";
 		set.headers["Referrer-Policy"] = "no-referrer";
+		set.headers["Permissions-Policy"] =
+			"camera=(), microphone=(), geolocation=()";
+		// Strict CSP. style-src allows 'unsafe-inline' because react-toastify
+		// injects its stylesheet at runtime; everything else stays locked to
+		// same-origin (no CDNs, no inline scripts — Vite emits external files).
+		set.headers["Content-Security-Policy"] =
+			"default-src 'none'; base-uri 'none'; form-action 'self'; " +
+			"frame-ancestors 'none'; object-src 'none'; img-src 'self' data:; " +
+			"style-src 'self' 'unsafe-inline'; font-src 'self'; " +
+			"script-src 'self'; connect-src 'self'";
+		// The SPA entry must never be cached long (hashed assets get their
+		// long max-age from the static plugin instead).
+		const { pathname } = new URL(request.url);
+		if (pathname === "/" || pathname.endsWith("index.html")) {
+			set.headers["Cache-Control"] = "no-cache";
+		}
 	})
 
 	.use(HealthRoute)

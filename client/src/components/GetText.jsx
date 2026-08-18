@@ -11,7 +11,7 @@ const GetText = () => {
 	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async () => {
-		if (!allInfo.key) return toast.error("Please enter a key");
+		if (!allInfo.key.trim()) return toast.error("Please enter a key");
 
 		setLoading(true);
 
@@ -22,42 +22,44 @@ const GetText = () => {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					key: allInfo.key,
+					key: allInfo.key.trim(),
 					password: allInfo.password,
 				}),
 			});
 
 			if (!response.ok) {
-				const errorData = await response.json();
-				throw new Error(
-					errorData.message || `HTTP error! status: ${response.status}`,
-				);
+				let message = `HTTP error! status: ${response.status}`;
+				try {
+					const errorData = await response.json();
+					if (errorData?.message) message = errorData.message;
+				} catch {
+					/* non-JSON error body */
+				}
+				throw new Error(message);
 			}
 
-			const text = await response.json();
-			setAllInfo({
-				...allInfo,
+			// API returns the paste text as a bare string (OpenAPI: t.String()).
+			const text = await response.text();
+			setAllInfo((prev) => ({
+				...prev,
 				text,
-			});
+			}));
 			toast.success("Gottem!");
 		} catch (error) {
-			//   console.error('Error during get operation:', error);
-			toast.error("No text found using the key provided!");
+			toast.error(error.message || "No text found using the key provided!");
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	return (
-		<>
-			<TextDisplay
-				allInfo={allInfo}
-				setAllInfo={setAllInfo}
-				loading={loading}
-				handleSubmit={handleSubmit}
-				aria-label="Text Display"
-			/>
-		</>
+		<TextDisplay
+			allInfo={allInfo}
+			setAllInfo={setAllInfo}
+			loading={loading}
+			handleSubmit={handleSubmit}
+			aria-label="Text Display"
+		/>
 	);
 };
 

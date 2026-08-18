@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from "react";
+import { toast } from "react-toastify";
 
 import Spinner from "./Spinner";
 
 const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
-	const maxCharacters = 1000;
 	const textareaRef = useRef(null);
 	const gutterRef = useRef(null);
 
@@ -45,125 +45,142 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 
 	const handleShowPasswordToggle = () => setShowPassword((prev) => !prev);
 
+	const lineCount = allInfo.text ? allInfo.text.split("\n").length : 1;
+
 	return (
-		<div className="flex flex-col items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg shadow-md w-11/12 mx-auto">
-			<label htmlFor="yoursoontobetext" className="sr-only">
-				Text Output
-			</label>
-			<div className="relative w-full flex" style={{ height: "12rem" }}>
-				{/* Line numbers gutter */}
-				<div
-					ref={gutterRef}
-					className="flex flex-col items-end bg-gray-200 rounded-l-md select-none text-gray-500 font-mono text-base pt-3 pb-3 border border-r-0 border-gray-300 overflow-y-auto hide-scrollbar"
-					style={{
-						minWidth: "2.5em",
-						lineHeight: "1.5",
-						height: "100%",
-						scrollbarWidth: "none",
-					}}
-				>
-					{Array.from(
-						{ length: loading ? 1 : allInfo.text?.split("\n").length || 1 },
-						(_, i) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: no data to use
-							<span key={i} className="h-6 leading-6 mr-2">
-								{i + 1}
-							</span>
-						),
-					)}
+		<div className="w-full bg-white border border-stone-200 rounded-xl shadow-sm">
+			<div className="px-4 py-3 border-b border-stone-100">
+				<h2 className="text-sm font-semibold text-stone-700">Retrieve a jot</h2>
+			</div>
+
+			<div className="p-4 space-y-3">
+				<div>
+					<label
+						htmlFor="display-key"
+						className="block text-xs font-medium text-stone-500 mb-1"
+					>
+						Key
+					</label>
+					<input
+						id="display-key"
+						type="text"
+						className="w-full px-3 py-2 text-sm font-mono text-stone-800 bg-white border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-400/40 focus:border-accent-500 transition-shadow"
+						placeholder="Paste your key"
+						value={allInfo.key}
+						onChange={handleKeyChange}
+						onKeyDown={(event) => {
+							if (event.key === "Enter") {
+								event.preventDefault();
+								handleSubmit();
+							}
+						}}
+						disabled={loading}
+					/>
 				</div>
-				{/* Text area */}
-				<textarea
-					ref={textareaRef}
-					className="w-full p-3 text-base font-mono text-gray-800 border border-gray-300 rounded-r-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 overflow-y-auto"
-					style={{ lineHeight: "1.5", height: "100%" }}
-					value={loading ? "Loading..." : allInfo.text}
-					rows={4}
-					cols={50}
-					name="yoursoontobetext"
-					id="yoursoontobetext"
-					readOnly={true}
-					autoComplete="off"
-					autoCorrect="off"
-					spellCheck="false"
-					autoCapitalize="none"
-					maxLength={maxCharacters}
-					placeholder="Get your text here..."
-					aria-label="Text output area"
-					onScroll={handleScroll}
-				/>
+
+				<div>
+					<label
+						htmlFor="display-password"
+						className="block text-xs font-medium text-stone-500 mb-1"
+					>
+						Password <span className="font-normal text-stone-400">(if set)</span>
+					</label>
+					<div className="relative">
+						<input
+							id="display-password"
+							type={showPassword ? "text" : "password"}
+							className="w-full px-3 py-2 pr-16 text-sm font-mono text-stone-800 bg-white border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-400/40 focus:border-accent-500 transition-shadow"
+							placeholder="Enter password"
+							value={allInfo.password}
+							onChange={handlePasswordChange}
+							onKeyDown={(event) => {
+								if (event.key === "Enter") {
+									event.preventDefault();
+									handleSubmit();
+								}
+							}}
+							disabled={loading}
+						/>
+						<button
+							type="button"
+							onClick={handleShowPasswordToggle}
+							className="absolute inset-y-0 right-0 px-3 text-[11px] font-semibold tracking-wide text-stone-400 hover:text-accent-600 transition-colors"
+							aria-label={showPassword ? "Hide password" : "Show password"}
+						>
+							{showPassword ? "HIDE" : "SHOW"}
+						</button>
+					</div>
+				</div>
+
+				<div className="flex gap-2 pt-1">
+					<button
+						type="button"
+						onClick={handleSubmit}
+						disabled={loading}
+						className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-accent-600 hover:bg-accent-700 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+					>
+						{loading ? <Spinner /> : null}
+						{loading ? "Fetching…" : "Get text"}
+					</button>
+					<button
+						type="button"
+						onClick={handleClear}
+						disabled={loading}
+						className="px-4 py-2.5 text-sm font-medium text-stone-600 bg-white border border-stone-300 hover:bg-stone-50 rounded-lg transition-colors disabled:opacity-60"
+					>
+						Clear
+					</button>
+				</div>
 			</div>
-			<div className="flex w-full mt-2 justify-end">
-				<button
-					type="button"
-					className="px-2 py-1 text-xs text-gray-600 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2"
-					onClick={() => {
-						if (allInfo.text) {
-							navigator.clipboard.writeText(allInfo.text);
-						}
-					}}
-					aria-label="Copy text to clipboard"
-					disabled={!allInfo.text || loading}
-				>
-					Copy
-				</button>
-			</div>
-			<input
-				type="text"
-				className="w-full p-1 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-12 mb-2"
-				value={allInfo.key}
-				onChange={handleKeyChange}
-				placeholder="Enter key"
-				id="key-input"
-				aria-label="Enter key"
-				autoComplete="off"
-				disabled={loading}
-			/>
-			<div className="relative w-full">
-				<input
-					type={allInfo.showPassword ? "text" : "password"}
-					className="w-full p-1 text-base text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-12"
-					value={allInfo.password}
-					onChange={handlePasswordChange}
-					placeholder="Enter password (optional)"
-					id="password-input-main"
-					aria-label="Enter password (optional)"
-					autoComplete="off"
-					disabled={loading}
-				/>
-				<button
-					type="button"
-					className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-600 bg-gray-200 rounded px-2 py-1 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-					onClick={handleShowPasswordToggle}
-					disabled={loading || allInfo.password === ""}
-					tabIndex={-1}
-					aria-pressed={allInfo.showPassword}
-					aria-label={allInfo.showPassword ? "Hide password" : "Show password"}
-				>
-					{showPassword ? "Hide" : "Show"}
-				</button>
-			</div>
-			<div className="flex space-x-2 w-full mt-4">
-				<button
-					type="button"
-					className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-150 disabled:opacity-50"
-					onClick={handleSubmit}
-					disabled={loading}
-					aria-label="Get text"
-					aria-disabled={loading}
-				>
-					{/* {loading ? <Spinner /> : null} */}
-					{loading ? "Getting..." : "Get"}
-				</button>
-				<button
-					type="button"
-					className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors duration-150"
-					onClick={handleClear}
-					aria-label="Clear form"
-				>
-					Clear
-				</button>
-			</div>
+
+			{allInfo.text && (
+				<div className="border-t border-stone-100">
+					<div className="px-4 pt-3 flex items-center justify-between">
+						<h3 className="text-xs font-semibold tracking-wide text-stone-400 uppercase">
+							Content
+						</h3>
+						<button
+							type="button"
+							onClick={() => {
+								navigator.clipboard
+									.writeText(allInfo.text)
+									.then(() => toast.success("Copied"))
+									.catch(() => toast.error("Could not copy"));
+							}}
+							className="text-xs font-medium text-stone-500 hover:text-accent-600 transition-colors"
+						>
+							Copy all
+						</button>
+					</div>
+					<label htmlFor="yoursoontobetext" className="sr-only">
+						Text Output
+					</label>
+					<div className="relative flex m-4 mt-2" style={{ height: "12rem" }}>
+						{/* Line numbers gutter */}
+						<div
+							ref={gutterRef}
+							className="flex flex-col items-end rounded-l-lg select-none text-stone-400 font-mono text-sm leading-relaxed py-3 pr-2 overflow-y-auto hide-scrollbar border border-r-0 border-stone-200 bg-stone-50"
+							style={{ minWidth: "2.5em", lineHeight: "1.5" }}
+							aria-hidden="true"
+						>
+							{Array.from({ length: lineCount }, (_, i) => (
+								<span key={i} className="px-1">
+									{i + 1}
+								</span>
+							))}
+						</div>
+						<textarea
+							id="yoursoontobetext"
+							ref={textareaRef}
+							readOnly
+							className="w-full p-3 text-sm font-mono leading-relaxed text-stone-800 bg-paper rounded-r-lg border border-stone-200 resize-none focus:outline-none focus:ring-2 focus:ring-accent-400/40"
+							style={{ lineHeight: "1.5" }}
+							value={allInfo.text}
+							onScroll={handleScroll}
+						/>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

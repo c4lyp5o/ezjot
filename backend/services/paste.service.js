@@ -17,7 +17,7 @@ export const PasteService = {
 			throw error;
 		}
 
-		const passwordHash = password ? hashPassword(password) : null;
+		const passwordHash = password ? await hashPassword(password) : null;
 
 		// Retry on UNIQUE collision instead of checking first: check-then-insert
 		// races under concurrency, and the constraint is the source of truth.
@@ -46,7 +46,7 @@ export const PasteService = {
 			throw error;
 		}
 
-		if (row.password_hash && !verifyPassword(password, row.password_hash)) {
+		if (row.password_hash && !(await verifyPassword(password, row.password_hash))) {
 			const error = new Error("Incorrect password");
 			error.status = 403;
 			throw error;

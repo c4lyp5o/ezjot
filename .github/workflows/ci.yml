@@ -20,3 +20,10 @@ jobs:
 
       - name: 🧪 Run tests
         run: bun run test
+
+      - name: 🎨 Build & lint client
+        run: |
+          cd client
+          bun install --frozen-lockfile
+          bun run build
+          bun run lint

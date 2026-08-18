@@ -89,19 +89,12 @@ export const isUniqueViolation = (error) =>
 	/UNIQUE constraint failed/i.test(error?.message ?? "");
 
 // ---- Password hashing -------------------------------------------------------
-// scrypt with a per-paste random salt, stored as "salt:hash". Constant-time
-// comparison so timing can't leak whether the first bytes matched.
+// Argon2id via Bun.password. The stored value is a self-contained PHC string
+// (salt + params + hash), and Bun's verify() re-derives parameters from it, so
+// future cost bumps never orphan existing hashes. Constant-time by design.
 
-const SCRYPT_KEYLEN = 64;
+export const hashPassword = (password) =>
+	Bun.password.hash(password, { algorithm: "argon2id" });
 
-export const hashPassword = (password) => {
-  const salt = Bun.randomBytes(6).toString("hex");
-  const hash = Bun.password(password, { compareCycles: 32 }).toString("hex");
-  return `${salt}:${hash}`;
-};
-
-export const verifyPassword = async (password, stored) => {
-  const [salt, hash] = stored.split(":");
-  if (!salt || !hash) return false;
-  return Bun.password.verify(password, hash);
-};
+export const verifyPassword = (password, stored) =>
+	Bun.password.verify(password, stored);
