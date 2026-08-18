@@ -95,20 +95,13 @@ export const isUniqueViolation = (error) =>
 const SCRYPT_KEYLEN = 64;
 
 export const hashPassword = (password) => {
-	const salt = crypto.randomBytes(16).toString("hex");
-	const hash = crypto.scryptSync(password, salt, SCRYPT_KEYLEN).toString("hex");
-	return `${salt}:${hash}`;
+  const salt = Bun.randomBytes(6).toString("hex");
+  const hash = Bun.password(password, { compareCycles: 32 }).toString("hex");
+  return `${salt}:${hash}`;
 };
 
-export const verifyPassword = (password, stored) => {
-	const [salt, hash] = stored.split(":");
-	if (!salt || !hash) return false;
-
-	const candidate = crypto.scryptSync(password, salt, SCRYPT_KEYLEN);
-	const expected = Buffer.from(hash, "hex");
-
-	return (
-		candidate.length === expected.length &&
-		crypto.timingSafeEqual(candidate, expected)
-	);
+export const verifyPassword = async (password, stored) => {
+  const [salt, hash] = stored.split(":");
+  if (!salt || !hash) return false;
+  return Bun.password.verify(password, hash);
 };
