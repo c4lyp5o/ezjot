@@ -1,5 +1,5 @@
 # Stage 1: Build the frontend
-FROM oven/bun:1.2.13-alpine AS builder
+FROM oven/bun:1.4-alpine AS builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ WORKDIR /app/frontend
 RUN bun install && bun run build
 
 # Stage 2: Production
-FROM oven/bun:1.2.13-alpine
+FROM oven/bun:1.4-alpine
 
 # Install for alpine
 RUN apk update --no-cache && \

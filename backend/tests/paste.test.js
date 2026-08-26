@@ -44,7 +44,7 @@ describe("EZJOT API", () => {
 	it("POST /api/v1/save - returns a share key", async () => {
 		const res = await savePaste({ text: "hello world" });
 		expect(res.status).toBe(201);
-		expect(await res.text()).toMatch(/^[0-9a-f]{12}$/);
+		expect(await res.text()).toMatch(/^[0-9a-f]{6}$/);
 	});
 
 	it("save then get - roundtrips the text", async () => {
