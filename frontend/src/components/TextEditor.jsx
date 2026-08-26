@@ -52,12 +52,10 @@ const TextEditor = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 	return (
 		<div className="w-full bg-white border border-stone-200 rounded-xl shadow-sm">
 			<div className="flex items-center justify-between px-4 py-3 border-b border-stone-100">
-				<h2 className="text-sm font-semibold text-stone-700">New jot</h2>
+				<h2 className="text-sm font-semibold text-stone-700">Save a jot</h2>
 				<span
 					className={`font-mono text-xs ${
-						characterCount >= maxCharacters
-							? "text-rose-600"
-							: "text-stone-400"
+						characterCount >= maxCharacters ? "text-rose-600" : "text-stone-400"
 					}`}
 				>
 					{characterCount}/{maxCharacters}
@@ -90,7 +88,8 @@ const TextEditor = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 						htmlFor="editor-password"
 						className="block text-xs font-medium text-stone-500 mb-1"
 					>
-						Password <span className="font-normal text-stone-400">(optional)</span>
+						Password{" "}
+						<span className="font-normal text-stone-400">(optional)</span>
 					</label>
 					<div className="relative">
 						<input

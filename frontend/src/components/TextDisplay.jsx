@@ -83,7 +83,8 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 						htmlFor="display-password"
 						className="block text-xs font-medium text-stone-500 mb-1"
 					>
-						Password <span className="font-normal text-stone-400">(if set)</span>
+						Password{" "}
+						<span className="font-normal text-stone-400">(if set)</span>
 					</label>
 					<div className="relative">
 						<input
@@ -164,6 +165,7 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 							aria-hidden="true"
 						>
 							{Array.from({ length: lineCount }, (_, i) => (
+								// biome-ignore lint/suspicious/noArrayIndexKey: later
 								<span key={i} className="px-1">
 									{i + 1}
 								</span>
