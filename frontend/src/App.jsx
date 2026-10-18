@@ -1,14 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { ToastContainer } from "react-toastify";
-
-const Landing = React.lazy(() => import("./pages/Landing"));
-const NotFound = React.lazy(() => import("./pages/NotFound"));
+import Landing from "./pages/Landing";
+import NotFound from "./pages/NotFound";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const App = () => {
+	const [theme, setTheme] = useState(() => {
+		try {
+			return localStorage.getItem("theme") || "dark";
+		} catch {
+			return "dark";
+		}
+	});
+
+	useEffect(() => {
+		document.documentElement.classList.toggle("dark", theme === "dark");
+		try {
+			localStorage.setItem("theme", theme);
+		} catch {
+			/* ignore */
+		}
+	}, [theme]);
+
+	const toggleTheme = () =>
+		setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+
 	return (
-		<>
-			<ToastContainer
+		<ErrorBoundary>
+			<>
+				<ToastContainer
 				position="top-right"
 				autoClose={3000}
 				hideProgressBar={false}
@@ -18,18 +39,25 @@ const App = () => {
 				pauseOnFocusLoss
 				draggable
 				pauseOnHover
-				theme="light"
+				theme={theme === "dark" ? "dark" : "light"}
 				toastClassName="!rounded-lg !text-sm !shadow-sm"
 			/>
 			<React.Suspense fallback={null}>
 				<BrowserRouter>
 					<Routes>
-						<Route index element={<Landing />} />
-						<Route path="*" element={<NotFound />} />
+						<Route
+							index
+							element={<Landing theme={theme} onToggleTheme={toggleTheme} />}
+						/>
+						<Route
+							path="*"
+							element={<NotFound theme={theme} onToggleTheme={toggleTheme} />}
+						/>
 					</Routes>
 				</BrowserRouter>
 			</React.Suspense>
 		</>
+		</ErrorBoundary>
 	);
 };
 
