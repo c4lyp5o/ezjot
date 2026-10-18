@@ -22,7 +22,7 @@
 		"elysia": "^1.4.30"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.10",
-		"concurrently": "^9.2.5"
+		"@biomejs/biome": "2.5.15",
+		"concurrently": "^10.0.6"
 	}
 }
