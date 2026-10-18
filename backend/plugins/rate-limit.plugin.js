@@ -17,6 +17,11 @@ export const rateLimitHandler = ({ limit = 10, windowMs = 60000 } = {}) => {
 		const now = Date.now();
 		const windowStart = now - windowMs;
 
+		// Evict expired buckets on every request to keep memory bounded.
+		for (const [k, times] of buckets) {
+			if (times.every((t) => t <= windowStart)) buckets.delete(k);
+		}
+
 		const hits = (buckets.get(key) || []).filter((t) => t > windowStart);
 		if (hits.length >= limit) {
 			set.status = 429;
