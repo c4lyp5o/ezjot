@@ -6,7 +6,7 @@ import { Brand, Shell } from "../ez/Shell";
 
 const Landing = () => (
 	<Shell brand={<Brand name="ezjot" glyph="jt" scope="Self-hosted text sharing" />} width="max-w-[1080px]">
-		<div className="flex min-h-[calc(100dvh-7.5rem)] flex-col">
+		<div className="flex flex-col">
 			<section className="relative isolate mb-8 min-h-[150px] pt-6 pb-8">
 				<Backdrop className="-z-10 left-auto hidden w-[45%] md:block" opacity={0.5} nodes={14} />
 				<h1 className="text-[24px] font-semibold tracking-[-0.01em] text-ink">Jot it down. Share it anywhere.</h1>
@@ -24,12 +24,6 @@ const Landing = () => (
 				</StaggerItem>
 			</Stagger>
 
-			<footer className="mt-auto pt-5 flex items-center justify-between border-t border-line text-[12px] text-mute">
-				<span>
-					ezjot <span className="font-mono">v2.1.0</span>
-				</span>
-				<span>Self-hosted · no tracking</span>
-			</footer>
 		</div>
 	</Shell>
 );
