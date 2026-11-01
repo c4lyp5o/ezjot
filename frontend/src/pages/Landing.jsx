@@ -1,59 +1,37 @@
-import SaveText from "../components/SaveText";
 import GetText from "../components/GetText";
+import SaveText from "../components/SaveText";
+import Backdrop from "../ez/Backdrop";
+import { Stagger, StaggerItem } from "../ez/motion";
+import { Brand, Shell } from "../ez/Shell";
 
-const Landing = ({ theme, onToggleTheme }) => {
-	return (
-		<div className="min-h-screen flex flex-col">
-			<header className="sticky top-0 z-10 bg-paper/85 backdrop-blur border-b border-stone-200/80">
-				<div className="max-w-5xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
-					<a
-						href="/"
-						className="font-mono text-sm tracking-tight text-ink"
-						aria-label="EZJOT home"
-					>
-						ezjot<span className="text-accent-600">.</span>
-					</a>
-					<span className="text-xs text-stone-400 font-mono hidden sm:inline">
-						jot down anything
-					</span>
-					<button
-						type="button"
-						onClick={onToggleTheme}
-						aria-label="Toggle theme"
-						className="px-3 py-1.5 text-xs font-medium text-stone-600 bg-white border border-stone-200 rounded-lg hover:bg-stone-50 transition-colors"
-					>
-						{theme === "dark" ? "☀ Light" : "🌙 Dark"}
-					</button>
-				</div>
-			</header>
+const Landing = () => (
+	<Shell brand={<Brand name="ezjot" glyph="jt" scope="Self-hosted text sharing" />} width="max-w-[1080px]">
+		<div className="flex min-h-[calc(100dvh-7.5rem)] flex-col">
+			<section className="relative isolate mb-8 min-h-[150px] pt-6 pb-8">
+				<Backdrop className="-z-10 left-auto hidden w-[45%] md:block" opacity={0.5} nodes={14} />
+				<h1 className="text-[24px] font-semibold tracking-[-0.01em] text-ink">Jot it down. Share it anywhere.</h1>
+				<p className="mt-1 max-w-md text-[14px] text-mute">
+					Save a note, share its key. Optional password, optional burn after reading.
+				</p>
+			</section>
 
-			<main className="flex-1 w-full max-w-5xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
-				<section className="text-center mb-10 sm:mb-14">
-					<h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-ink">
-						Jot it down.
-						<span className="text-accent-600"> Share it anywhere.</span>
-					</h1>
-				</section>
+			<Stagger className="mb-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+				<StaggerItem>
+					<SaveText />
+				</StaggerItem>
+				<StaggerItem>
+					<GetText />
+				</StaggerItem>
+			</Stagger>
 
-				<section className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-					<div className="p-1">
-						<SaveText />
-					</div>
-
-					<div className="p-1">
-						<GetText />
-					</div>
-				</section>
-			</main>
-
-			<footer className="border-t border-stone-200/80">
-				<div className="max-w-5xl mx-auto px-5 sm:px-8 py-6 flex items-center justify-between text-xs text-stone-400">
-					<span className="font-mono">ezjot v2.1.0</span>
-					<span>self-hosted · no tracking</span>
-				</div>
+			<footer className="mt-auto pt-5 flex items-center justify-between border-t border-line text-[12px] text-mute">
+				<span>
+					ezjot <span className="font-mono">v2.1.0</span>
+				</span>
+				<span>Self-hosted · no tracking</span>
 			</footer>
 		</div>
-	);
-};
+	</Shell>
+);
 
 export default Landing;
