@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "../ez/toast";
+import { Collapse } from "../ez/motion";
+import { btn, Chip, cx, panel, SectionLabel } from "../ez/ui";
 import TextEditor from "./TextEditor";
 
 const SaveText = () => {
@@ -72,28 +74,23 @@ const SaveText = () => {
 				handleSubmit={handleSubmit}
 				aria-label="Text Editor"
 			/>
-			{allInfo?.key && (
-				<div className="w-full mt-4 bg-white border border-stone-200 rounded-xl shadow-sm">
-					<div className="px-4 py-3 border-b border-stone-100">
-						<p className="text-sm font-semibold text-stone-700">Your key</p>
-						<p className="text-xs text-stone-400 mt-0.5">
-							Use it to retrieve the jot — it&apos;s the only way back.
-						</p>
+			<Collapse open={!!allInfo?.key}>
+				<div className={cx(panel, "mt-4")} aria-live="polite">
+					<div className="flex items-center gap-2 border-b border-line px-5 py-3">
+						<SectionLabel>Your key</SectionLabel>
+						<span className="text-[12px] text-mute">The only way back to this jot.</span>
+						<Chip tone="ok" className="ml-auto">
+							Saved
+						</Chip>
 					</div>
-					<div className="px-4 py-3 flex items-center gap-2">
-						<code className="flex-1 px-3 py-2 font-mono text-sm text-accent-700 bg-accent-50 border border-accent-100 rounded-lg break-all">
-							{allInfo.key}
-						</code>
-						<button
-							type="button"
-							onClick={handleCopyKey}
-							className="px-3 py-2 text-sm font-medium text-accent-700 bg-accent-50 border border-accent-200 hover:bg-accent-100 rounded-lg transition-colors"
-						>
+					<div className="flex items-center gap-2 px-5 py-4">
+						<code className="flex-1 break-all rounded-lg border border-line bg-inset px-3 py-2 text-[13px] text-accent">{allInfo.key}</code>
+						<button type="button" onClick={handleCopyKey} className={cx(btn.base, btn.ghost)}>
 							{copied ? "Copied" : "Copy"}
 						</button>
 					</div>
 				</div>
-			)}
+			</Collapse>
 		</>
 	);
 };
