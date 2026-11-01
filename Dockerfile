@@ -3,6 +3,8 @@ FROM oven/bun:1.4.2-alpine AS builder
 
 WORKDIR /app
 
+# The footer reads the app version from the root package.json at build time.
+COPY package.json ./
 COPY frontend ./frontend
 WORKDIR /app/frontend
 RUN bun install && bun run build
