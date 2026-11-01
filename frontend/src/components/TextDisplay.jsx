@@ -1,6 +1,8 @@
 import { useState, useRef, useCallback } from "react";
-import { toast } from "react-toastify";
+import { toast } from "../ez/toast";
 
+import { Collapse } from "../ez/motion";
+import { btn, cx, inputCls, labelCls, panel, SectionLabel } from "../ez/ui";
 import Spinner from "./Spinner";
 
 const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
@@ -47,99 +49,78 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 
 	const lineCount = allInfo.text ? allInfo.text.split("\n").length : 1;
 
+	const onEnter = (event) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			handleSubmit();
+		}
+	};
+
 	return (
-		<div className="w-full bg-white border border-stone-200 rounded-xl shadow-sm">
-			<div className="px-4 py-3 border-b border-stone-100">
-				<h2 className="text-sm font-semibold text-stone-700">Retrieve a jot</h2>
+		<div className={cx(panel, "w-full")}>
+			<div className="border-b border-line px-5 py-3">
+				<SectionLabel>Retrieve a jot</SectionLabel>
 			</div>
 
-			<div className="p-4 space-y-3">
+			<div className="space-y-4 p-5">
 				<div>
-					<label
-						htmlFor="display-key"
-						className="block text-xs font-medium text-stone-500 mb-1"
-					>
+					<label htmlFor="display-key" className={labelCls}>
 						Key
 					</label>
 					<input
 						id="display-key"
 						type="text"
-						className="w-full px-3 py-2 text-sm font-mono text-stone-800 bg-white border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-400/40 focus:border-accent-500 transition-shadow"
+						className={cx(inputCls, "font-code")}
 						placeholder="Paste your key"
 						value={allInfo.key}
 						onChange={handleKeyChange}
-						onKeyDown={(event) => {
-							if (event.key === "Enter") {
-								event.preventDefault();
-								handleSubmit();
-							}
-						}}
+						onKeyDown={onEnter}
 						disabled={loading}
 					/>
 				</div>
 
 				<div>
-					<label
-						htmlFor="display-password"
-						className="block text-xs font-medium text-stone-500 mb-1"
-					>
-						Password{" "}
-						<span className="font-normal text-stone-400">(if set)</span>
+					<label htmlFor="display-password" className={labelCls}>
+						Password <span className="font-normal">(if one was set)</span>
 					</label>
 					<div className="relative">
 						<input
 							id="display-password"
 							type={showPassword ? "text" : "password"}
-							className="w-full px-3 py-2 pr-16 text-sm font-mono text-stone-800 bg-white border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-400/40 focus:border-accent-500 transition-shadow"
+							className={cx(inputCls, "pr-16")}
 							placeholder="Enter password"
 							value={allInfo.password}
 							onChange={handlePasswordChange}
-							onKeyDown={(event) => {
-								if (event.key === "Enter") {
-									event.preventDefault();
-									handleSubmit();
-								}
-							}}
+							onKeyDown={onEnter}
 							disabled={loading}
 						/>
 						<button
 							type="button"
 							onClick={handleShowPasswordToggle}
-							className="absolute inset-y-0 right-0 px-3 text-[11px] font-semibold tracking-wide text-stone-400 hover:text-accent-600 transition-colors"
+							className="absolute inset-y-0 right-0 px-3 text-[12px] text-mute hover:text-ink"
 							aria-label={showPassword ? "Hide password" : "Show password"}
 						>
-							{showPassword ? "HIDE" : "SHOW"}
+							{showPassword ? "Hide" : "Show"}
 						</button>
 					</div>
 				</div>
 
 				<div className="flex gap-2 pt-1">
-					<button
-						type="button"
-						onClick={handleSubmit}
-						disabled={loading}
-						className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-accent-600 hover:bg-accent-700 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-					>
+					<button type="button" onClick={handleSubmit} disabled={loading} className={cx(btn.base, btn.ghost, "flex-1")}>
 						{loading ? <Spinner /> : null}
 						{loading ? "Fetching…" : "Get text"}
 					</button>
-					<button
-						type="button"
-						onClick={handleClear}
-						disabled={loading}
-						className="px-4 py-2.5 text-sm font-medium text-stone-600 bg-white border border-stone-300 hover:bg-stone-50 rounded-lg transition-colors disabled:opacity-60"
-					>
+					<button type="button" onClick={handleClear} disabled={loading} className={cx(btn.base, btn.ghost)}>
 						Clear
 					</button>
 				</div>
 			</div>
 
-			{allInfo.text && (
-				<div className="border-t border-stone-100">
-					<div className="px-4 pt-3 flex items-center justify-between">
-						<h3 className="text-xs font-semibold tracking-wide text-stone-400 uppercase">
-							Content
-						</h3>
+			<Collapse open={!!allInfo.text}>
+				<div className="border-t border-line">
+					<div className="flex items-center gap-3 px-5 pt-4">
+						<SectionLabel>Content</SectionLabel>
+						<span className="mr-auto font-mono text-[12px] text-mute">{lineCount.toLocaleString("en-US")} lines</span>
 						<button
 							type="button"
 							onClick={() => {
@@ -148,41 +129,40 @@ const TextDisplay = ({ allInfo, setAllInfo, loading, handleSubmit }) => {
 									.then(() => toast.success("Copied"))
 									.catch(() => toast.error("Could not copy"));
 							}}
-							className="text-xs font-medium text-stone-500 hover:text-accent-600 transition-colors"
+							className={cx(btn.sm, btn.ghost)}
 						>
 							Copy all
 						</button>
 					</div>
-					<label htmlFor="yoursoontobetext" className="sr-only">
-						Text Output
+					<label htmlFor="yourtextoutput" className="sr-only">
+						Text output
 					</label>
-					<div className="relative flex m-4 mt-2" style={{ height: "12rem" }}>
-						{/* Line numbers gutter */}
+					<div className="relative m-5 mt-3 flex overflow-hidden rounded-lg border border-line" style={{ height: "12rem" }}>
 						<div
 							ref={gutterRef}
-							className="flex flex-col items-end rounded-l-lg select-none text-stone-400 font-mono text-sm leading-relaxed py-3 pr-2 overflow-y-auto hide-scrollbar border border-r-0 border-stone-200 bg-stone-50"
-							style={{ minWidth: "2.5em", lineHeight: "1.5" }}
+							className="hide-scrollbar flex select-none flex-col items-end overflow-y-auto border-r border-line bg-raised py-3 pr-2 font-code text-[13px] text-mute"
+							style={{ minWidth: "2.75em", lineHeight: "1.5" }}
 							aria-hidden="true"
 						>
 							{Array.from({ length: lineCount }, (_, i) => (
-								// biome-ignore lint/suspicious/noArrayIndexKey: later
+								// biome-ignore lint/suspicious/noArrayIndexKey: line numbers are positional
 								<span key={i} className="px-1">
 									{i + 1}
 								</span>
 							))}
 						</div>
 						<textarea
-							id="yoursoontobetext"
+							id="yourtextoutput"
 							ref={textareaRef}
 							readOnly
-							className="w-full p-3 text-sm font-mono leading-relaxed text-stone-800 bg-paper rounded-r-lg border border-stone-200 resize-none focus:outline-none focus:ring-2 focus:ring-accent-400/40"
+							className="w-full resize-none bg-inset p-3 font-code text-[13px] text-ink focus:outline-none"
 							style={{ lineHeight: "1.5" }}
 							value={allInfo.text}
 							onScroll={handleScroll}
 						/>
 					</div>
 				</div>
-			)}
+			</Collapse>
 		</div>
 	);
 };
