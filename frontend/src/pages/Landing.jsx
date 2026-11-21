@@ -5,7 +5,7 @@ import { Stagger, StaggerItem } from "../ez/motion";
 import { Brand, Shell } from "../ez/Shell";
 
 const Landing = () => (
-	<Shell brand={<Brand name="ezjot" glyph="jt" scope="Self-hosted text sharing" />} width="max-w-[1080px]">
+	<Shell brand={<Brand name="ezjot" scope="Self-hosted text sharing" />} width="max-w-[1080px]">
 		<div className="flex flex-col">
 			<section className="relative isolate mb-8 min-h-[150px] pt-6 pb-8">
 				<Backdrop className="-z-10 left-auto hidden w-[45%] md:block" opacity={0.5} nodes={14} />
