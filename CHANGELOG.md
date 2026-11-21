@@ -4,12 +4,10 @@ All notable changes to ezjot are recorded here. The format follows [Keep a Chang
 
 ## [Unreleased]
 
-### Changed
-- Header, sidebar and sign-in use the shared ez `Brand`: the ez icon and the lowercase name.
-
 ## [2.1.1] - 2026-11-22
 
 ### Changed
+- Header, sidebar and sign-in use the shared ez `Brand`: the ez icon and the lowercase name.
 - Dependencies updated (majors kept only where the tests passed), Docker image on oven/bun 1.4.5, Biome as the linter, and the shared ez favicon.
 
 ## [2.1.0]
