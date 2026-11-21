@@ -4,6 +4,9 @@ All notable changes to ezjot are recorded here. The format follows [Keep a Chang
 
 ## [Unreleased]
 
+### Changed
+- Header, sidebar and sign-in use the shared ez `Brand`: the ez icon and the lowercase name.
+
 ## [2.1.1] - 2026-11-22
 
 ### Changed
