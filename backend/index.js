@@ -102,7 +102,7 @@ if (process.env.NODE_ENV === "development") {
 				info: {
 					title: "EZJOT API",
 					description: "Simple secure text sharing",
-					version: "2.1.0",
+					version: "2.1.1",
 				},
 			},
 		}),
