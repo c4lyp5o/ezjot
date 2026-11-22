@@ -29,3 +29,6 @@ db/*.sqlite-*
 
 # logs
 logs/*.log
+
+# runtime state (DATA_DIR default when run from source)
+/data/

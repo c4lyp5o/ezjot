@@ -1,57 +1,38 @@
-# Stage 1: Build the frontend
-FROM oven/bun:1.4.2-alpine AS builder
+# ez standard Dockerfile: a build stage for the frontend bundle, then an Alpine
+# runtime that runs as the unprivileged `bun` user (uid 1000) with a wget
+# healthcheck. Keep the Bun version in step with `bun-version` in .github/workflows.
 
+# ---- build: frontend bundle ----
+FROM oven/bun:1.4.5-alpine AS build
 WORKDIR /app
-
-# The footer reads the app version from the root package.json at build time.
+COPY frontend/package.json frontend/bun.lock ./frontend/
+RUN cd frontend && bun install --frozen-lockfile
 COPY package.json ./
 COPY frontend ./frontend
-WORKDIR /app/frontend
-RUN bun install && bun run build
+RUN cd frontend && bun run build
 
-# Stage 2: Production
-FROM oven/bun:1.4.2-alpine
-
-# Install for alpine
-RUN apk update --no-cache && \
-    apk add --no-cache curl tzdata su-exec
-
-# Set timezone data
-ENV TZ=Asia/Kuala_Lumpur
-ENV NODE_ENV=production
-
-# Run as the image's built-in non-root user (oven/bun ships `bun`, uid/gid 1000)
-
+# ---- runtime ----
+FROM oven/bun:1.4.5-alpine
+ARG APP_VERSION=dev
+LABEL org.opencontainers.image.title="ezjot" \
+	org.opencontainers.image.source="https://github.com/c4lyp5o/ezjot" \
+	org.opencontainers.image.licenses="MIT" \
+	org.opencontainers.image.version="$APP_VERSION"
+RUN apk add --no-cache tzdata
+ENV TZ=Asia/Kuala_Lumpur \
+	NODE_ENV=production \
+	HOST=0.0.0.0 \
+	PORT=5000 \
+	DATA_DIR=/data
 WORKDIR /app
-
-# Install only production dependencies (--ignore-scripts: the root `install`
-# script is a user-facing convenience, not a lifecycle hook for builds)
 COPY package.json bun.lock ./
-RUN bun install --production --ignore-scripts
-
-# Copy backend source code
+RUN bun install --production --frozen-lockfile --ignore-scripts
 COPY backend ./backend
-
-# Copy built frontend files from the builder
-COPY --from=builder /app/public /app/public
-
-# Copy purge script (runs weekly via the container's cron)
-COPY utils/purge.sh /etc/periodic/weekly/purge.sh
-RUN chmod +x /etc/periodic/weekly/purge.sh
-
-# Writable data dirs for the app user
-RUN mkdir -p /app/db /app/logs && chown -R bun:bun /app/db /app/logs
-
-# Expose your server port
+COPY --from=build /app/public ./public
+RUN mkdir -p /data /data/logs && chown -R bun:bun /data /data/logs
+USER bun
+VOLUME ["/data"]
 EXPOSE 5000
-
-# Add a health check to ensure the container is running properly
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:5000/api/v1/healthcheck || exit 1
-
-# Entrypoint fixes volume ownership, starts the weekly purge cron, then runs
-# the app as the non-root user (busybox crond does not run by default in the
-# oven/bun alpine image).
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT ["docker-entrypoint.sh"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --start-interval=2s --retries=3 \
+	CMD wget -qO- "http://127.0.0.1:${PORT}/api/v1/healthcheck" >/dev/null || exit 1
+CMD ["bun", "backend/index.js"]
