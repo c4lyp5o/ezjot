@@ -9,6 +9,8 @@ import { generalLogger as logger } from "./logger";
 
 import { HealthRoute } from "./routes/health.route";
 import { PasteRoutes } from "./routes/paste.route";
+import { schedule } from "./schedule";
+import { PasteService } from "./services/paste.service";
 
 // The static plugin errors on a missing assets dir; make sure it exists even
 // before the client has been built (dev mode, fresh checkout).
@@ -113,6 +115,14 @@ if (process.env.NODE_ENV === "development") {
 try {
 	app.listen(PORT);
 	logger.info(`[server] ✨ EZJOT is running on port ${app.server?.port}`);
+	// Weekly wipe, Saturday 03:00 (was the image's /etc/periodic/weekly cron).
+	schedule({
+		hour: 3,
+		weekday: 6,
+		name: "purge",
+		job: () => PasteService.purgeAll(),
+		log: logger,
+	});
 } catch (err) {
 	logger.error("[server] Failed to start server: ", err);
 	process.exit(1);

@@ -1,2 +1,12 @@
 node_modules
 npm-debug.log
+
+# ez standard
+.git
+.github
+**/node_modules
+**/.env
+**/.env.*
+!**/.env.example
+**/*.log
+coverage

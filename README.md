@@ -14,13 +14,13 @@ EZJOT is a lightweight, web-based note-taking application. Access it online at [
 - Save text up to **1000 characters**, retrieve with a key
 - Optional password protection
 - **Burn after reading** — text deletes itself after one read
-- **Autopurge** — stale pastes are removed nightly by cron
+- **Autopurge** — every paste is wiped weekly (Saturday 03:00)
 
 ## Tech Stack
 
 - **Backend:** Bun + [Elysia](https://elysiajs.com), SQLite, OpenAPI at `/api/v1`
 - **Frontend:** React (Vite), Tailwind CSS v4
-- **Other:** Docker (non-root), daily purge cron, CSP + security headers
+- **Other:** Docker (non-root), weekly purge, CSP + security headers
 
 ## Getting Started
 
@@ -44,7 +44,7 @@ docker build . -t ezjot
 docker run -p <desired host port>:5000 -v ezjot-db:/app/db ezjot:latest
 ```
 
-The weekly purge cron runs inside the container.
+The app wipes all pastes itself, weekly on Saturday at 03:00 (container time).
 
 ## Limitations
 
