@@ -22,14 +22,16 @@ RUN apk add --no-cache tzdata
 ENV TZ=Asia/Kuala_Lumpur \
 	NODE_ENV=production \
 	HOST=0.0.0.0 \
-	PORT=5000
+	PORT=5000 \
+	DATA_DIR=/data
 WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --production --frozen-lockfile --ignore-scripts
 COPY backend ./backend
 COPY --from=build /app/public ./public
-RUN mkdir -p /app/db /app/logs && chown -R bun:bun /app/db /app/logs
+RUN mkdir -p /data /data/logs && chown -R bun:bun /data /data/logs
 USER bun
+VOLUME ["/data"]
 EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --start-interval=2s --retries=3 \
 	CMD wget -qO- "http://127.0.0.1:${PORT}/api/v1/healthcheck" >/dev/null || exit 1

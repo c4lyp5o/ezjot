@@ -1,14 +1,21 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { dataDir, keepLegacy } from "./datadir.js";
 
 // import.meta.dir is Bun-only; derive it portably so vitest can import this too.
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 
 export const PORT =
 	process.env.PORT !== undefined ? Number(process.env.PORT) : 5000;
-export const DB_DIR = path.join(HERE, "../db");
-export const DB_PATH = process.env.DB_PATH || path.join(DB_DIR, "ezjot.sqlite");
-export const LOG_DIR = path.join(HERE, "../logs");
+// All state lives under DATA_DIR (ez standard). A database at the pre-2.2
+// location (db/ezjot.sqlite) keeps being used until it is moved.
+const ROOT = path.join(HERE, "..");
+export const DATA_DIR = dataDir(ROOT);
+export const DB_PATH =
+	process.env.DB_PATH ||
+	keepLegacy(path.join(DATA_DIR, "ezjot.sqlite"), [path.join(ROOT, "db/ezjot.sqlite")]);
+export const DB_DIR = path.dirname(DB_PATH);
+export const LOG_DIR = path.join(DATA_DIR, "logs");
 export const PUBLIC_DIR = path.join(HERE, "../public");
 
 // Keys are lowercase hex strings; 6 bytes = 48 bits of entropy (~281 trillion
