@@ -41,7 +41,7 @@ auto-creates the database.
 
 ```bash
 docker build . -t ezjot
-docker run -p <desired host port>:5000 -v ezjot-db:/app/db ezjot:latest
+docker run -p <desired host port>:5000 -v ezjot-data:/data ezjot:latest
 ```
 
 The app wipes all pastes itself, weekly on Saturday at 03:00 (container time).
